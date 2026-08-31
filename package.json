@@ -1,0 +1,40 @@
+{
+  "name": "kathir-xerox-merchant-book",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:export": "powershell -Command \"try { if (Test-Path 'src\\app\\api') { Move-Item 'src\\app\\api' 'src\\api_server' -Force }; next build; } finally { if (Test-Path 'src\\api_server') { Move-Item 'src\\api_server' 'src\\app\\api' -Force } }\"",
+    "start": "next start",
+    "lint": "next lint",
+    "cron:digest": "node scripts/whatsapp-cron.js",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "@prisma/client": "^5.22.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "lucide-react": "^0.436.0",
+    "next": "^14.2.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.5.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.4"
+  }
+}

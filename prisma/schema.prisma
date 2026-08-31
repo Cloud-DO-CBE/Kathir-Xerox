@@ -1,0 +1,106 @@
+// Prisma Schema for Kathir Xerox & E-Service Centre
+// Supports both PostgreSQL and MySQL database providers
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model DailyBook {
+  id                 String        @id @default(cuid())
+  date               String        @unique // YYYY-MM-DD
+  status             String        @default("OPEN") // OPEN | CLOSED
+  total_cash         Float         @default(0.0)
+  total_upi          Float         @default(0.0)
+  total_due          Float         @default(0.0)
+  total_amount       Float         @default(0.0)
+  total_transactions Int           @default(0)
+  closed_at          DateTime?
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+  transactions       Transaction[]
+
+  @@map("daily_books")
+}
+
+model Service {
+  id                 String            @id
+  name               String
+  name_ta            String?
+  category           String // XEROX | PRINT | E_SERVICE | LAMINATION | STATIONERY | OTHER
+  default_unit_price Float             @default(0.0)
+  unit_label         String?           @default("unit")
+  is_active          Boolean           @default(true)
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+  transaction_items  TransactionItem[]
+
+  @@map("services")
+}
+
+model Transaction {
+  id             String            @id @default(cuid())
+  book_id        String?
+  timestamp      DateTime          @default(now())
+  token_no       String
+  payment_mode   String // CASH | UPI | DUE | SPLIT
+  customer_ref   String?
+  customer_phone String?
+  grand_total    Float             @default(0.0)
+  cash_amount    Float             @default(0.0)
+  upi_amount     Float             @default(0.0)
+  due_amount     Float             @default(0.0)
+  notes          String?
+  created_at     DateTime          @default(now())
+  book           DailyBook?        @relation(fields: [book_id], references: [id], onDelete: Cascade)
+  items          TransactionItem[]
+
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id             String       @id @default(cuid())
+  transaction_id String
+  service_id     String?
+  item_name      String
+  category       String
+  quantity       Int          @default(1)
+  unit_price     Float        @default(0.0)
+  subtotal       Float        @default(0.0)
+  transaction    Transaction  @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
+  service        Service?     @relation(fields: [service_id], references: [id], onDelete: SetNull)
+
+  @@map("transaction_items")
+}
+
+model CustomerDue {
+  id             String   @id @default(cuid())
+  customer_ref   String   @unique
+  customer_phone String?
+  total_due      Float    @default(0.0)
+  last_settled   DateTime?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  @@map("customer_dues")
+}
+
+model ShopSettings {
+  id                  String   @id @default("default")
+  shop_name           String   @default("Kathir Xerox & E-Service Centre")
+  shop_name_ta        String?  @default("கதிர் ஜெராக்ஸ் & இ-சேவை மையம்")
+  phone               String?  @default("9842100000")
+  owner_whatsapp      String?  @default("9842100000")
+  upi_id              String?  @default("kathirxerox@okaxis")
+  address             String?  @default("Next to SNS complex, Perumal temple street , Senjeriputhur")
+  access_password     String   @default("RX135")
+  enable_auto_digest  Boolean  @default(true)
+  updated_at          DateTime @updatedAt
+
+  @@map("shop_settings")
+}

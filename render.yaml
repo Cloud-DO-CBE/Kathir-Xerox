@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: kathir-xerox-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.16.5
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+      - key: WHATSAPP_CRON_SECRET
+        sync: false

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&amp;family=Outfit:wght@400;600;700;800;900&amp;family=Inter:wght@700;800;900&amp;display=swap');
+      .cdo-cloud {
+        font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+        font-weight: 900;
+        letter-spacing: -2px;
+      }
+      .cdo-do {
+        font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+        font-weight: 900;
+        fill: #ffffff;
+        letter-spacing: -1px;
+      }
+      .cdo-tech {
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        font-weight: 800;
+        letter-spacing: 2.5px;
+        font-size: 26px;
+        fill: #000000;
+      }
+      .cdo-tagline {
+        font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+        fill: #111827;
+      }
+    </style>
+  </defs>
+
+  <!-- Solid Black Drop Shadow underneath cloud -->
+  <path d="M 175 125
+           C 165 75, 230 45, 290 60
+           C 340 30, 420 50, 435 110
+           C 490 115, 545 165, 530 230
+           C 545 295, 485 365, 415 360
+           C 375 390, 305 390, 260 365
+           C 220 385, 155 365, 130 325
+           C 65 315, 45 235, 80 180
+           C 65 135, 125 105, 175 125 Z"
+        fill="#000000"
+        transform="translate(16, 20)" />
+
+  <!-- Main Cyan Cloud Body with Heavy Outline -->
+  <path d="M 175 125
+           C 165 75, 230 45, 290 60
+           C 340 30, 420 50, 435 110
+           C 490 115, 545 165, 530 230
+           C 545 295, 485 365, 415 360
+           C 375 390, 305 390, 260 365
+           C 220 385, 155 365, 130 325
+           C 65 315, 45 235, 80 180
+           C 65 135, 125 105, 175 125 Z"
+        fill="#4fe2ff"
+        stroke="#000000"
+        stroke-width="12"
+        stroke-linejoin="round" />
+
+  <!-- "Cloud.DO" Center Title -->
+  <g transform="translate(108, 256)">
+    <text x="0" y="0" font-size="96" fill="#000000" class="cdo-cloud">
+      Cloud.<tspan class="cdo-do">DO</tspan>
+    </text>
+  </g>
+
+  <!-- "TECHNOLOGIES" -->
+  <g transform="translate(300, 298)">
+    <text x="0" y="0" class="cdo-tech">TECHNOLOGIES</text>
+  </g>
+
+  <!-- Accent line & Tagline: Turning Ideas Into Visual Experiences -->
+  <g transform="translate(150, 314)">
+    <line x1="10" y1="-4" x2="140" y2="-4" stroke="#000000" stroke-width="1.2" opacity="0.3" />
+    <text x="155" y="0" class="cdo-tagline">Turning Ideas Into Visual Experiences</text>
+  </g>
+</svg>
