@@ -65,13 +65,13 @@ export const PosCounter: React.FC<PosCounterProps> = ({
   const [notes, setNotes] = useState<string>('');
 
   // Categories list
-  const categories: { key: ServiceCategory | 'ALL'; label: string; labelTa: string }[] = [
-    { key: 'ALL', label: 'All Items', labelTa: 'அனைத்தும்' },
-    { key: 'XEROX', label: 'Xerox', labelTa: 'ஜெராக்ஸ்' },
-    { key: 'PRINT', label: 'Printouts', labelTa: 'பிரிண்ட்' },
-    { key: 'E_SERVICE', label: 'E-Sevai', labelTa: 'இ-சேவை' },
-    { key: 'LAMINATION', label: 'Lamination', labelTa: 'லேமினேஷன்' },
-    { key: 'STATIONERY', label: 'Stationery', labelTa: 'ஸ்டேஷனரி' },
+  const categories: { key: ServiceCategory | 'ALL'; labelTa: string; label: string }[] = [
+    { key: 'ALL', labelTa: 'அனைத்தும்', label: 'All Items' },
+    { key: 'XEROX', labelTa: 'ஜெராக்ஸ்', label: 'Xerox' },
+    { key: 'PRINT', labelTa: 'பிரிண்ட்', label: 'Printouts' },
+    { key: 'E_SERVICE', labelTa: 'இ-சேவை மையம்', label: 'E-Sevai' },
+    { key: 'LAMINATION', labelTa: 'லேமினேஷன்', label: 'Lamination' },
+    { key: 'STATIONERY', labelTa: 'ஸ்டேஷனரி', label: 'Stationery' },
   ];
 
   // Filter services
@@ -195,7 +195,7 @@ export const PosCounter: React.FC<PosCounterProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 text-black">
       {/* Left Column: Touch Catalogue & Multiplier (7 cols) */}
       <div className="lg:col-span-7 flex flex-col gap-3">
         {/* Category Pills */}
@@ -204,27 +204,27 @@ export const PosCounter: React.FC<PosCounterProps> = ({
             <button
               key={cat.key}
               onClick={() => setActiveCategory(cat.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs shrink-0 transition-all border ${
                 activeCategory === cat.key
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                  ? 'bg-black text-white border-black shadow-sm font-black'
+                  : 'bg-white text-black hover:bg-slate-100 border-slate-300 font-bold'
               }`}
             >
-              <div>{cat.label}</div>
-              <div className="text-[9px] opacity-70 font-normal">{cat.labelTa}</div>
+              <div className="font-extrabold text-[12px] leading-tight">{cat.labelTa}</div>
+              <div className="text-[9px] font-semibold opacity-90">{cat.label}</div>
             </button>
           ))}
         </div>
 
         {/* Search Catalogue */}
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-black absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search items by English or Tamil..."
+            placeholder="பொருட்களை தேடுக / Search items (English or Tamil)..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-medium text-black placeholder:text-slate-600 outline-none focus:border-black focus:ring-1 focus:ring-black"
           />
         </div>
 
@@ -234,30 +234,32 @@ export const PosCounter: React.FC<PosCounterProps> = ({
             <button
               key={srv.id}
               onClick={() => addToCart(srv, 1)}
-              className="bg-white hover:bg-sky-50/60 p-3 rounded-xl border border-slate-200 hover:border-brand-400 shadow-xs flex flex-col justify-between text-left transition-all active:scale-[0.98] group"
+              className="bg-white hover:bg-sky-50/70 p-3 rounded-xl border border-slate-300 hover:border-black shadow-xs flex flex-col justify-between text-left transition-all active:scale-[0.98] group"
             >
               <div>
-                <div className="flex items-center justify-between gap-1 mb-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-1.5 py-0.2 rounded">
+                <div className="flex items-center justify-between gap-1 mb-1.5">
+                  <span className="text-[10px] font-black text-black uppercase tracking-wider bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded">
                     {srv.category}
                   </span>
-                  <span className="text-xs font-extrabold font-mono text-emerald-700">
+                  <span className="text-xs font-black font-mono text-emerald-800">
                     {formatINR(srv.default_unit_price)}
                   </span>
                 </div>
-                <div className="text-xs font-bold text-slate-800 line-clamp-2 group-hover:text-brand-700">
-                  {srv.name}
+                {/* Tamil Name First (Bold & Black) */}
+                <div className="text-xs font-black text-black line-clamp-2 leading-snug">
+                  {srv.name_ta || srv.name}
                 </div>
+                {/* English Name Below (Clear Black) */}
                 {srv.name_ta && (
-                  <div className="text-[10px] text-slate-500 line-clamp-1 mt-0.5 font-medium">
-                    {srv.name_ta}
+                  <div className="text-[10px] text-slate-800 font-bold line-clamp-1 mt-0.5">
+                    {srv.name}
                   </div>
                 )}
               </div>
 
-              <div className="mt-3 flex items-center justify-between text-[11px] text-brand-600 font-semibold pt-2 border-t border-slate-100">
-                <span>+ Add Item</span>
-                <span className="bg-brand-50 text-brand-700 w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              <div className="mt-3 flex items-center justify-between text-[11px] text-black font-bold pt-2 border-t border-slate-200">
+                <span>+ சேர் / Add</span>
+                <span className="bg-black text-white w-5 h-5 rounded-full flex items-center justify-center font-black text-xs">
                   +
                 </span>
               </div>
@@ -267,23 +269,26 @@ export const PosCounter: React.FC<PosCounterProps> = ({
       </div>
 
       {/* Right Column: POS Cart, Multipliers & Checkout (5 cols) */}
-      <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col justify-between">
+      <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-300 shadow-sm p-4 flex flex-col justify-between text-black">
         <div>
           {/* Cart Header */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-300 mb-3">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-brand-600" />
-              <h2 className="text-sm font-bold text-slate-800">
-                Current Bill Items ({cart.length})
-              </h2>
+              <ShoppingBag className="w-5 h-5 text-black" />
+              <div>
+                <h2 className="text-sm font-black text-black leading-tight">
+                  தற்போதைய பில் உருப்படிகள் ({cart.length})
+                </h2>
+                <p className="text-[10px] text-slate-800 font-bold">Current Bill Items</p>
+              </div>
             </div>
             {cart.length > 0 && (
               <button
                 onClick={clearCart}
-                className="text-xs text-rose-600 hover:underline font-semibold flex items-center gap-1"
+                className="text-xs text-rose-700 hover:text-rose-900 font-black flex items-center gap-1 bg-rose-50 border border-rose-200 px-2 py-1 rounded-lg"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                Clear
+                அழி / Clear
               </button>
             )}
           </div>
@@ -291,36 +296,42 @@ export const PosCounter: React.FC<PosCounterProps> = ({
           {/* Cart Items List */}
           <div className="max-h-[220px] overflow-y-auto space-y-2 mb-3 pr-1">
             {cart.length === 0 ? (
-              <div className="py-8 text-center text-slate-400">
-                <p className="text-xs">Cart is empty.</p>
-                <p className="text-[11px] text-slate-400 mt-1">Tap items on the left to add.</p>
+              <div className="py-8 text-center text-slate-700 font-medium">
+                <p className="text-xs font-bold text-black">பில் பட்டியல் காலியாக உள்ளது</p>
+                <p className="text-[11px] text-slate-600 mt-1">பொருட்களை சேர்க்க இடதுபுறம் உள்ள உருப்படிகளை தொடவும்</p>
+                <p className="text-[10px] text-slate-500 font-mono mt-0.5">(Cart is empty • Tap items on the left to add)</p>
               </div>
             ) : (
               cart.map((item, index) => (
                 <div
                   key={index}
-                  className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2 text-xs"
+                  className="bg-slate-50 p-2.5 rounded-xl border border-slate-300 flex items-center justify-between gap-2 text-xs"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-slate-900 truncate">
-                      {item.service.name}
+                    <div className="font-black text-black truncate leading-tight">
+                      {item.service.name_ta || item.service.name}
                     </div>
-                    <div className="text-[11px] text-slate-500 font-mono flex items-center gap-1 mt-0.5">
-                      <span>Rate: ₹</span>
+                    {item.service.name_ta && (
+                      <div className="text-[10px] text-slate-700 font-semibold truncate mt-0.5">
+                        {item.service.name}
+                      </div>
+                    )}
+                    <div className="text-[11px] text-black font-mono font-bold flex items-center gap-1 mt-0.5">
+                      <span>விலை/Rate: ₹</span>
                       <input
                         type="number"
                         value={item.unitPrice}
                         onChange={(e) => updateCartPrice(index, parseFloat(e.target.value) || 0)}
-                        className="w-12 bg-white border border-slate-300 rounded px-1 text-center font-bold text-slate-800 text-[11px]"
+                        className="w-12 bg-white border border-slate-400 rounded px-1 text-center font-bold text-black text-[11px]"
                       />
                     </div>
                   </div>
 
                   {/* Quantity Stepper */}
-                  <div className="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg p-0.5">
+                  <div className="flex items-center gap-1 bg-white border border-slate-400 rounded-lg p-0.5">
                     <button
                       onClick={() => updateCartQty(index, item.quantity - 1)}
-                      className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded"
+                      className="w-6 h-6 flex items-center justify-center text-black font-bold hover:bg-slate-200 rounded"
                     >
                       <Minus className="w-3 h-3" />
                     </button>
@@ -328,25 +339,26 @@ export const PosCounter: React.FC<PosCounterProps> = ({
                       type="number"
                       value={item.quantity}
                       onChange={(e) => updateCartQty(index, parseInt(e.target.value) || 1)}
-                      className="w-10 text-center font-mono font-bold text-slate-900 text-xs bg-transparent outline-none"
+                      className="w-10 text-center font-mono font-black text-black text-xs bg-transparent outline-none"
                     />
                     <button
                       onClick={() => updateCartQty(index, item.quantity + 1)}
-                      className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded font-bold"
+                      className="w-6 h-6 flex items-center justify-center text-black font-black hover:bg-slate-200 rounded"
                     >
                       <Plus className="w-3 h-3" />
                     </button>
                   </div>
 
                   {/* Subtotal */}
-                  <div className="text-right font-mono font-bold text-slate-900 min-w-[50px]">
+                  <div className="text-right font-mono font-black text-black min-w-[55px]">
                     {formatINR(item.subtotal)}
                   </div>
 
                   {/* Remove */}
                   <button
                     onClick={() => removeFromCart(index)}
-                    className="text-slate-400 hover:text-rose-600 p-1"
+                    className="text-slate-600 hover:text-rose-700 p-1 rounded hover:bg-rose-50"
+                    title="Remove Item"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -357,8 +369,8 @@ export const PosCounter: React.FC<PosCounterProps> = ({
 
           {/* Quick Bulk Multiplier Shortcuts */}
           {cart.length > 0 && (
-            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg mb-3 text-[11px]">
-              <span className="font-semibold text-slate-600 shrink-0">Quick Add to Last:</span>
+            <div className="flex items-center gap-1 bg-slate-100 p-1.5 rounded-lg mb-3 text-[11px] border border-slate-200">
+              <span className="font-bold text-black shrink-0">எண்ணிக்கை / Add:</span>
               {[5, 10, 20, 50, 100].map((num) => (
                 <button
                   key={num}
@@ -367,7 +379,7 @@ export const PosCounter: React.FC<PosCounterProps> = ({
                       updateCartQty(cart.length - 1, cart[cart.length - 1].quantity + num);
                     }
                   }}
-                  className="bg-white hover:bg-brand-50 border border-slate-200 hover:border-brand-300 font-mono font-bold text-slate-800 px-2 py-0.5 rounded shadow-xs"
+                  className="bg-white hover:bg-black hover:text-white border border-slate-300 font-mono font-black text-black px-2 py-0.5 rounded shadow-xs transition-colors"
                 >
                   +{num}
                 </button>
@@ -380,33 +392,33 @@ export const PosCounter: React.FC<PosCounterProps> = ({
             <div className="grid grid-cols-2 gap-2 text-xs">
               <input
                 type="text"
-                placeholder="Customer Name (Optional)"
+                placeholder="வாடிக்கையாளர் பெயர் / Customer Name"
                 value={customerRef}
                 onChange={(e) => setCustomerRef(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-brand-500"
+                className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-black placeholder:text-slate-600 outline-none focus:border-black"
               />
               <input
                 type="tel"
-                placeholder="Phone (Optional)"
+                placeholder="தொலைபேசி எண் / Phone"
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-brand-500"
+                className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-black placeholder:text-slate-600 outline-none focus:border-black font-mono"
               />
             </div>
           </div>
 
           {/* Payment Mode Selection */}
           <div className="mb-3">
-            <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">
-              Payment Method
+            <label className="block text-[11px] font-black text-black uppercase tracking-wider mb-1">
+              கட்டண முறை / Payment Method
             </label>
             <div className="grid grid-cols-4 gap-1.5">
               {[
-                { mode: 'CASH', label: 'Cash', icon: Wallet },
-                { mode: 'UPI', label: 'UPI / GPay', icon: CreditCard },
-                { mode: 'DUE', label: 'Due / Khata', icon: AlertCircle },
-                { mode: 'SPLIT', label: 'Split', icon: Sparkles },
-              ].map(({ mode, label, icon: Icon }) => (
+                { mode: 'CASH', labelTa: 'ரொக்கம்', label: 'Cash', icon: Wallet },
+                { mode: 'UPI', labelTa: 'ஜிபே / UPI', label: 'UPI / GPay', icon: CreditCard },
+                { mode: 'DUE', labelTa: 'கடன் பாக்கி', label: 'Due / Khata', icon: AlertCircle },
+                { mode: 'SPLIT', labelTa: 'பிரிப்பு', label: 'Split', icon: Sparkles },
+              ].map(({ mode, labelTa, label, icon: Icon }) => (
                 <button
                   key={mode}
                   type="button"
@@ -417,37 +429,38 @@ export const PosCounter: React.FC<PosCounterProps> = ({
                       setSplitUpi(Math.ceil(grandTotal / 2));
                     }
                   }}
-                  className={`p-2 rounded-xl border text-center flex flex-col items-center justify-center gap-1 transition-all ${
+                  className={`p-2 rounded-xl border text-center flex flex-col items-center justify-center gap-0.5 transition-all ${
                     paymentMode === mode
-                      ? 'bg-brand-600 text-white border-brand-600 shadow-sm font-bold'
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50 font-medium'
+                      ? 'bg-black text-white border-black shadow-sm font-black'
+                      : 'bg-white text-black border-slate-300 hover:bg-slate-100 font-bold'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
-                  <span className="text-[10px]">{label}</span>
+                  <span className="text-[11px] font-black leading-none">{labelTa}</span>
+                  <span className="text-[9px] opacity-80 leading-none">{label}</span>
                 </button>
               ))}
             </div>
 
             {/* Split inputs if SPLIT selected */}
             {paymentMode === 'SPLIT' && (
-              <div className="mt-2 grid grid-cols-2 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs">
+              <div className="mt-2 grid grid-cols-2 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-300 text-xs">
                 <div>
-                  <label className="block text-[10px] text-slate-500 font-bold">Cash (₹)</label>
+                  <label className="block text-[10px] text-black font-black">ரொக்கம் / Cash (₹)</label>
                   <input
                     type="number"
                     value={splitCash}
                     onChange={(e) => setSplitCash(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-white border border-slate-300 rounded px-2 py-1 font-mono font-bold"
+                    className="w-full bg-white border border-slate-400 rounded px-2 py-1 font-mono font-black text-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-500 font-bold">UPI (₹)</label>
+                  <label className="block text-[10px] text-black font-black">ஜிபே / UPI (₹)</label>
                   <input
                     type="number"
                     value={splitUpi}
                     onChange={(e) => setSplitUpi(parseFloat(e.target.value) || 0)}
-                    className="w-full bg-white border border-slate-300 rounded px-2 py-1 font-mono font-bold"
+                    className="w-full bg-white border border-slate-400 rounded px-2 py-1 font-mono font-black text-black"
                   />
                 </div>
               </div>
@@ -456,10 +469,12 @@ export const PosCounter: React.FC<PosCounterProps> = ({
         </div>
 
         {/* Total & Checkout Bar */}
-        <div className="pt-3 border-t border-slate-200">
+        <div className="pt-3 border-t border-slate-300">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-bold text-slate-600">Grand Total:</span>
-            <span className="text-2xl font-extrabold font-mono text-emerald-700">
+            <div>
+              <span className="text-sm font-black text-black">மொத்த தொகை / Grand Total:</span>
+            </div>
+            <span className="text-2xl font-black font-mono text-black">
               {formatINR(grandTotal)}
             </span>
           </div>
@@ -468,19 +483,25 @@ export const PosCounter: React.FC<PosCounterProps> = ({
             <button
               onClick={() => handleComplete(false)}
               disabled={cart.length === 0}
-              className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-3 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow-sm transition-all active:scale-[0.98]"
+              className="bg-black hover:bg-slate-800 disabled:opacity-50 text-white font-black py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs shadow-sm transition-all active:scale-[0.98] border border-black"
             >
-              <CheckCircle className="w-4 h-4" />
-              <span>Complete (₹)</span>
+              <div className="flex items-center gap-1.5 font-black text-sm">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <span>விற்பனை சேமி</span>
+              </div>
+              <span className="text-[10px] text-slate-300 font-semibold">Save Order (₹)</span>
             </button>
 
             <button
               onClick={() => handleComplete(true)}
               disabled={cart.length === 0}
-              className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white font-bold py-3 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow-sm transition-all active:scale-[0.98]"
+              className="bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white font-black py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-0.5 text-xs shadow-sm transition-all active:scale-[0.98] border border-emerald-800"
             >
-              <Printer className="w-4 h-4" />
-              <span>Print Bill & Save</span>
+              <div className="flex items-center gap-1.5 font-black text-sm">
+                <Printer className="w-4 h-4 text-white" />
+                <span>பில் அச்சிடு</span>
+              </div>
+              <span className="text-[10px] text-emerald-100 font-semibold">Print Bill & Save</span>
             </button>
           </div>
         </div>

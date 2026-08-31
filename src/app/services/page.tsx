@@ -118,23 +118,37 @@ export default function ServicesPage() {
             </div>
 
             {/* Categorized Service Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-black">
               {categories.map((cat) => {
                 const catItems = services.filter((s) => s.category === cat);
                 if (catItems.length === 0) return null;
 
+                const catLabels: Record<ServiceCategory, { ta: string; en: string }> = {
+                  XEROX: { ta: 'ஜெராக்ஸ்', en: 'Xerox Photocopy' },
+                  PRINT: { ta: 'பிரிண்ட் & புகைப்படம்', en: 'Printouts & Photos' },
+                  E_SERVICE: { ta: 'இ-சேவை மையம்', en: 'Online E-Sevai Services' },
+                  LAMINATION: { ta: 'லேமினேஷன் & பைண்டிங்', en: 'Lamination & Spiral' },
+                  STATIONERY: { ta: 'ஸ்டேஷனரி பொருட்கள்', en: 'Stationery Items' },
+                  OTHER: { ta: 'இதர சேவைகள்', en: 'Other Services' },
+                };
+
                 return (
                   <div
                     key={cat}
-                    className="bg-white/60 backdrop-blur-md p-3 rounded-xs border border-slate-200/90 shadow-2xs space-y-2"
+                    className="bg-white p-3 rounded-xs border border-slate-300 shadow-2xs space-y-2"
                   >
-                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
-                      <h3 className="font-serif font-bold text-sm text-slate-900 flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-xs bg-sky-600"></span>
-                        {cat === 'E_SERVICE' ? 'E-Sevai Online Services' : cat}
-                      </h3>
-                      <span className="text-[10px] font-mono text-slate-400 font-semibold">
-                        {catItems.length} items
+                    <div className="flex items-center justify-between pb-1.5 border-b border-slate-300">
+                      <div>
+                        <h3 className="font-serif font-black text-sm text-black flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-xs bg-black"></span>
+                          <span>{catLabels[cat]?.ta || cat}</span>
+                        </h3>
+                        <span className="text-[10px] text-slate-800 font-bold pl-4">
+                          {catLabels[cat]?.en || cat}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono text-black font-black bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                        {catItems.length} பொருட்கள்
                       </span>
                     </div>
 
@@ -142,36 +156,38 @@ export default function ServicesPage() {
                       {catItems.map((item) => (
                         <div
                           key={item.id}
-                          className="flex items-center justify-between gap-2 p-1.5 rounded-xs bg-white/80 border border-slate-200/80 text-xs"
+                          className="flex items-center justify-between gap-2 p-1.5 rounded-xs bg-slate-50 border border-slate-300 text-xs"
                         >
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-slate-900 truncate">
-                              {item.name}
+                            {/* Tamil Name First (Bold Black) */}
+                            <div className="font-black text-black truncate leading-tight">
+                              {item.name_ta || item.name}
                             </div>
+                            {/* English Name Below (Clear Black) */}
                             {item.name_ta && (
-                              <div className="text-[10px] text-slate-400 truncate">
-                                {item.name_ta}
+                              <div className="text-[10px] text-slate-800 font-bold truncate mt-0.5">
+                                {item.name}
                               </div>
                             )}
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="font-mono text-slate-400">₹</span>
+                            <span className="font-mono text-black font-black">₹</span>
                             <input
                               type="number"
                               step="0.5"
                               value={item.default_unit_price}
                               onChange={(e) => handlePriceChange(item.id, parseFloat(e.target.value) || 0)}
-                              className="w-16 bg-white border border-slate-300 rounded-xs px-1.5 py-0.5 text-right font-mono font-bold text-slate-900 text-xs focus:border-sky-500 outline-none"
+                              className="w-16 bg-white border border-slate-400 rounded-xs px-1.5 py-0.5 text-right font-mono font-black text-black text-xs focus:border-black outline-none"
                             />
-                            <span className="text-[10px] text-slate-400 font-mono w-10 truncate">
+                            <span className="text-[10px] text-black font-bold font-mono w-10 truncate">
                               /{item.unit_label || 'unit'}
                             </span>
                             <button
                               type="button"
-                              onClick={() => handleDeleteService(item.id, item.name)}
+                              onClick={() => handleDeleteService(item.id, item.name_ta || item.name)}
                               title="Delete / Remove Item"
-                              className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                              className="p-1 text-slate-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>

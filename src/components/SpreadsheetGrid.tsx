@@ -111,47 +111,68 @@ export const SpreadsheetGrid: React.FC<SpreadsheetGridProps> = ({
       </div>
 
       {/* Corporate Table Grid */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto text-black">
         <table className="w-full text-left corporate-table border-collapse">
           <thead>
-            <tr>
-              <th className="w-12 text-center">#</th>
-              <th className="w-24">Token</th>
-              <th className="w-20">Time</th>
-              <th className="min-w-[180px]">Service & Breakdown</th>
-              <th className="min-w-[140px]">Customer / Contact</th>
-              <th className="w-24 text-center">Mode</th>
-              <th className="w-28 text-right">Grand Total</th>
-              <th className="w-28 text-center">Actions</th>
+            <tr className="bg-slate-100 border-b border-slate-300 text-black">
+              <th className="w-12 text-center text-black font-black">#</th>
+              <th className="w-28 text-black font-black">
+                <div>டோக்கன்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Token No</div>
+              </th>
+              <th className="w-24 text-black font-black">
+                <div>நேரம்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Time</div>
+              </th>
+              <th className="min-w-[190px] text-black font-black">
+                <div>சேவை விபரம்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Service Breakdown</div>
+              </th>
+              <th className="min-w-[140px] text-black font-black">
+                <div>வாடிக்கையாளர்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Customer</div>
+              </th>
+              <th className="w-24 text-center text-black font-black">
+                <div>முறை</div>
+                <div className="text-[9px] text-slate-800 font-bold">Mode</div>
+              </th>
+              <th className="w-28 text-right text-black font-black">
+                <div>மொத்தம்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Total</div>
+              </th>
+              <th className="w-28 text-center text-black font-black">
+                <div>செயல்</div>
+                <div className="text-[9px] text-slate-800 font-bold">Actions</div>
+              </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-slate-300">
             {filteredTransactions.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-slate-400 text-xs font-mono">
-                  No records matching current filter
+                <td colSpan={8} className="py-8 text-center text-black text-xs font-bold font-mono">
+                  பதிவுகள் எதுவும் இல்லை / No records found
                 </td>
               </tr>
             ) : (
               filteredTransactions.map((tx, idx) => (
                 <tr 
                   key={tx.id}
-                  className="hover:bg-slate-50/80 transition-colors"
+                  className="hover:bg-slate-100 transition-colors"
                 >
                   {/* Row # */}
-                  <td className="text-center font-mono text-slate-400 text-[11px]">
+                  <td className="text-center font-mono text-black font-bold text-[11px]">
                     {idx + 1}
                   </td>
 
                   {/* Token */}
                   <td>
-                    <span className="font-mono font-bold text-xs bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded-xs border border-slate-200">
+                    <span className="font-mono font-black text-xs bg-slate-100 text-black px-1.5 py-0.5 rounded-xs border border-slate-400">
                       {tx.token_no}
                     </span>
                   </td>
 
                   {/* Time */}
-                  <td className="font-mono text-[11px] text-slate-500">
+                  <td className="font-mono text-[11px] text-black font-bold">
                     {formatTime(tx.timestamp)}
                   </td>
 
@@ -159,16 +180,16 @@ export const SpreadsheetGrid: React.FC<SpreadsheetGridProps> = ({
                   <td>
                     <div className="space-y-0.5">
                       {tx.items.map((item, itemIdx) => (
-                        <div key={itemIdx} className="text-xs text-slate-800 flex items-center justify-between gap-2">
-                          <span className="truncate font-medium">{item.item_name}</span>
-                          <span className="text-[11px] font-mono text-slate-500 shrink-0">
+                        <div key={itemIdx} className="text-xs text-black flex items-center justify-between gap-2">
+                          <span className="truncate font-black text-black">{item.item_name}</span>
+                          <span className="text-[11px] font-mono text-black font-black shrink-0">
                             x{item.quantity} ({formatINR(item.subtotal)})
                           </span>
                         </div>
                       ))}
                       {tx.notes && (
-                        <p className="text-[10px] text-slate-400 italic truncate">
-                          Note: {tx.notes}
+                        <p className="text-[10px] text-black font-semibold italic truncate">
+                          {tx.notes}
                         </p>
                       )}
                     </div>
@@ -177,11 +198,11 @@ export const SpreadsheetGrid: React.FC<SpreadsheetGridProps> = ({
                   {/* Customer */}
                   <td>
                     <div className="text-xs">
-                      <p className="font-semibold text-slate-800 truncate">
-                        {tx.customer_ref || 'Counter Customer'}
+                      <p className="font-black text-black truncate">
+                        {tx.customer_ref || 'கவுண்டர் வாடிக்கையாளர் (Counter)'}
                       </p>
                       {tx.customer_phone && (
-                        <p className="text-[10px] font-mono text-sky-700 truncate">
+                        <p className="text-[10px] font-mono font-bold text-black truncate">
                           {tx.customer_phone}
                         </p>
                       )}
@@ -193,22 +214,22 @@ export const SpreadsheetGrid: React.FC<SpreadsheetGridProps> = ({
                     <select
                       value={tx.payment_mode}
                       onChange={(e) => handlePaymentModeChange(tx, e.target.value as PaymentMode)}
-                      className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-xs border outline-none cursor-pointer ${
+                      className={`text-[10px] font-mono font-black px-1.5 py-0.5 rounded-xs border outline-none cursor-pointer ${
                         tx.payment_mode === 'CASH'
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          ? 'bg-emerald-100 text-black border-emerald-400'
                           : tx.payment_mode === 'UPI'
-                          ? 'bg-sky-50 text-sky-800 border-sky-300'
-                          : 'bg-amber-50 text-amber-800 border-amber-300'
+                          ? 'bg-sky-100 text-black border-sky-400'
+                          : 'bg-amber-100 text-black border-amber-400'
                       }`}
                     >
-                      <option value="CASH">CASH</option>
-                      <option value="UPI">UPI</option>
-                      <option value="DUE">DUE</option>
+                      <option value="CASH">ரொக்கம் (CASH)</option>
+                      <option value="UPI">ஜிபே (UPI)</option>
+                      <option value="DUE">பாக்கி (DUE)</option>
                     </select>
                   </td>
 
                   {/* Grand Total */}
-                  <td className="text-right font-mono font-bold text-xs sm:text-sm text-slate-900">
+                  <td className="text-right font-mono font-black text-xs sm:text-sm text-black">
                     {formatINR(tx.grand_total)}
                   </td>
 
@@ -249,16 +270,16 @@ export const SpreadsheetGrid: React.FC<SpreadsheetGridProps> = ({
           </tbody>
           {/* Table Summary Footer */}
           {filteredTransactions.length > 0 && (
-            <tfoot className="bg-slate-100/90 font-mono font-bold text-xs border-t-2 border-slate-300">
+            <tfoot className="bg-slate-100 font-mono font-black text-xs border-t-2 border-slate-400 text-black">
               <tr>
-                <td colSpan={3} className="text-right text-slate-600 uppercase text-[10px] py-2">
-                  Total Summary:
+                <td colSpan={3} className="text-right text-black uppercase text-[10px] py-2 font-black">
+                  மொத்த விபரம் / SUMMARY:
                 </td>
-                <td colSpan={3} className="text-slate-600 text-[11px] py-2">
-                  Cash: <strong className="text-emerald-700">{formatINR(subtotalCash)}</strong> | UPI: <strong className="text-sky-700">{formatINR(subtotalUpi)}</strong>
-                  {subtotalDue > 0 && <span> | Due: <strong className="text-amber-700">{formatINR(subtotalDue)}</strong></span>}
+                <td colSpan={3} className="text-black text-[11px] py-2">
+                  ரொக்கம்: <strong className="text-emerald-950 font-black">{formatINR(subtotalCash)}</strong> | ஜிபே: <strong className="text-sky-950 font-black">{formatINR(subtotalUpi)}</strong>
+                  {subtotalDue > 0 && <span> | பாக்கி: <strong className="text-amber-950 font-black">{formatINR(subtotalDue)}</strong></span>}
                 </td>
-                <td className="text-right text-slate-900 text-sm py-2">
+                <td className="text-right text-black text-sm py-2 font-black">
                   {formatINR(subtotalGross)}
                 </td>
                 <td></td>

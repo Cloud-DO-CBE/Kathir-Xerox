@@ -51,16 +51,16 @@ export const ShopLogo: React.FC<ShopLogoProps> = ({
       {badgeElement}
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5 leading-tight">
-          <span className="font-serif font-bold text-slate-900 tracking-tight text-base sm:text-lg">
-            Kathir Xerox
+          <span className="font-serif font-black text-black tracking-tight text-base sm:text-lg">
+            கதிர் ஜெராக்ஸ்
           </span>
-          <span className="hidden xs:inline-block bg-sky-50 text-[#008ba3] text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-xs border border-sky-200">
-            E-SEVAI
+          <span className="hidden xs:inline-block bg-black text-white text-[9px] font-mono font-black px-1.5 py-0.5 rounded-xs border border-black">
+            இ-சேவை மையம்
           </span>
         </div>
         {showSubtitle && (
-          <p className="text-[10px] text-slate-500 font-sans leading-tight mt-0.5">
-            கதிர் ஜெராக்ஸ் & இ-சேவை மையம் • Merchant Daybook
+          <p className="text-[10px] text-black font-semibold leading-tight mt-0.5">
+            Kathir Xerox & E-Service Centre • Daybook
           </p>
         )}
       </div>

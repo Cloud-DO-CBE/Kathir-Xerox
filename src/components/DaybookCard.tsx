@@ -64,80 +64,80 @@ export const DaybookCard: React.FC<DaybookCardProps> = ({
     return (
       <div 
         onClick={() => onOpen(dateStr)}
-        className={`group flex items-center justify-between p-2.5 bg-white/95 hover:bg-white border rounded-xs transition-all cursor-pointer shadow-2xs ${
+        className={`group flex items-center justify-between p-2.5 bg-white hover:bg-slate-50 border rounded-xs transition-all cursor-pointer shadow-2xs text-black ${
           isToday 
-            ? 'border-sky-500/80 bg-sky-50/20' 
-            : 'border-slate-200/90 hover:border-slate-400'
+            ? 'border-black bg-slate-50' 
+            : 'border-slate-300 hover:border-black'
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <div className={`w-7 h-7 rounded-xs flex items-center justify-center text-white shrink-0 border ${
-            isToday ? 'bg-sky-600 border-sky-500' : isYesterday ? 'bg-slate-800 border-slate-700' : 'bg-slate-700 border-slate-600'
+            isToday ? 'bg-black border-black font-black' : isYesterday ? 'bg-slate-800 border-slate-700' : 'bg-slate-700 border-slate-600'
           }`}>
             <FileSpreadsheet className="w-3.5 h-3.5" />
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate group-hover:text-sky-700 transition-colors">
-                Daybook — {formatDateDisplay(dateStr)}
+              <h4 className="text-xs sm:text-sm font-black text-black truncate leading-tight">
+                நாள் பதிவேடு — {formatDateDisplay(dateStr)}
               </h4>
               {isToday && (
-                <span className="bg-sky-950 text-sky-400 text-[9px] font-bold font-mono px-1.5 py-0.2 rounded-xs border border-sky-800">
-                  LIVE
+                <span className="bg-black text-white text-[9px] font-black font-mono px-1.5 py-0.2 rounded-xs border border-black">
+                  நேரலை / LIVE
                 </span>
               )}
               {isYesterday && (
-                <span className="bg-slate-100 text-slate-700 text-[9px] font-bold font-mono px-1.5 py-0.2 rounded-xs border border-slate-300">
-                  YESTERDAY
+                <span className="bg-slate-200 text-black text-[9px] font-bold font-mono px-1.5 py-0.2 rounded-xs border border-slate-400">
+                  நேற்று / YESTERDAY
                 </span>
               )}
             </div>
-            <p className="text-[10px] font-mono text-slate-500 mt-0.5">
-              {entriesCount} entries • Cash: {formatINR(totalCash)} | UPI: {formatINR(totalUpi)}
-              {totalDue > 0 && <span className="text-amber-700 font-bold"> • Due: {formatINR(totalDue)}</span>}
+            <p className="text-[10px] font-mono text-black font-bold mt-0.5">
+              {entriesCount} பதிவுகள் • ரொக்கம்: {formatINR(totalCash)} | ஜிபே: {formatINR(totalUpi)}
+              {totalDue > 0 && <span className="text-amber-950 font-black"> • பாக்கி: {formatINR(totalDue)}</span>}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           <div className="text-right">
-            <span className="font-mono font-bold text-xs sm:text-sm text-slate-900">
+            <span className="font-mono font-black text-xs sm:text-sm text-black">
               {formatINR(totalGross)}
             </span>
-            <p className="text-[9px] font-mono text-slate-400 uppercase">GROSS TOTAL</p>
+            <p className="text-[9px] font-mono text-slate-800 font-bold uppercase">மொத்த தொகை</p>
           </div>
 
           <div className="relative" ref={menuRef} onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xs transition-colors"
+              className="p-1 text-black hover:bg-slate-200 rounded-xs transition-colors"
             >
               <MoreVertical className="w-3.5 h-3.5" />
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 top-full mt-1 w-44 bg-slate-900 text-slate-200 rounded-xs shadow-2xl border border-slate-700 py-1 z-50 text-xs">
+              <div className="absolute right-0 top-full mt-1 w-48 bg-black text-white rounded-xs shadow-2xl border border-slate-700 py-1 z-50 text-xs">
                 <button
                   onClick={() => { onOpen(dateStr); setIsMenuOpen(false); }}
-                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-medium"
+                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-bold"
                 >
                   <Eye className="w-3.5 h-3.5 text-sky-400" />
-                  <span>Open Daybook</span>
+                  <span>பதிவேட்டை திற (Open)</span>
                 </button>
                 <button
                   onClick={() => { onSendDigest(dateStr, transactions); setIsMenuOpen(false); }}
-                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-medium"
+                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-bold"
                 >
                   <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>WhatsApp Summary</span>
+                  <span>வாட்ஸ்அப் அறிக்கை (WhatsApp)</span>
                 </button>
                 <button
                   onClick={() => { onExport(dateStr); setIsMenuOpen(false); }}
-                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-medium"
+                  className="w-full px-3 py-1.5 text-left hover:bg-slate-800 flex items-center gap-2 font-bold"
                 >
                   <Download className="w-3.5 h-3.5 text-slate-300" />
-                  <span>Export to Excel</span>
+                  <span>எக்செல் பதிவிறக்கு (Excel)</span>
                 </button>
               </div>
             )}
@@ -151,42 +151,42 @@ export const DaybookCard: React.FC<DaybookCardProps> = ({
   return (
     <div 
       onClick={() => onOpen(dateStr)}
-      className={`group bg-white/95 rounded-xs border transition-all duration-150 flex flex-col overflow-hidden cursor-pointer shadow-2xs hover:shadow-md hover:border-slate-400 ${
+      className={`group bg-white rounded-xs border transition-all duration-150 flex flex-col overflow-hidden cursor-pointer shadow-2xs hover:shadow-md text-black ${
         isToday 
-          ? 'border-sky-500/80 ring-1 ring-sky-500/20' 
+          ? 'border-black ring-1 ring-black/20' 
           : isYesterday
-          ? 'border-slate-300'
-          : 'border-slate-200/90'
+          ? 'border-slate-400'
+          : 'border-slate-300 hover:border-black'
       }`}
     >
       {/* Top Preview Canvas (Enterprise Mini Table) */}
-      <div className="h-28 bg-slate-50/90 p-2 border-b border-slate-200 flex flex-col justify-between relative overflow-hidden group-hover:bg-slate-50">
-        <div className="w-full bg-white rounded-xs border border-slate-200 shadow-2xs overflow-hidden text-[9px] font-mono">
-          <div className="bg-slate-100 text-slate-600 px-1.5 py-0.5 flex items-center justify-between border-b border-slate-200 font-bold">
-            <span className="w-10">TOKEN</span>
-            <span className="flex-1 truncate px-1">SERVICE</span>
-            <span className="w-8 text-center">MODE</span>
-            <span className="w-12 text-right">TOTAL</span>
+      <div className="h-28 bg-slate-50 p-2 border-b border-slate-300 flex flex-col justify-between relative overflow-hidden group-hover:bg-slate-100">
+        <div className="w-full bg-white rounded-xs border border-slate-300 shadow-2xs overflow-hidden text-[9px] font-mono">
+          <div className="bg-slate-100 text-black px-1.5 py-0.5 flex items-center justify-between border-b border-slate-300 font-black">
+            <span className="w-10">டோக்கன்</span>
+            <span className="flex-1 truncate px-1">சேவை</span>
+            <span className="w-8 text-center">முறை</span>
+            <span className="w-12 text-right">மொத்தம்</span>
           </div>
 
           {previewRows.length === 0 ? (
-            <div className="p-2 text-center text-slate-400 font-mono text-[9px]">
-              No transactions recorded
+            <div className="p-2 text-center text-black font-mono text-[9px] font-bold">
+              பதிவுகள் எதுவும் இல்லை
             </div>
           ) : (
             previewRows.map((tx, idx) => (
               <div 
                 key={tx.id || idx}
-                className="px-1.5 py-0.5 flex items-center justify-between border-b border-slate-100 text-slate-700"
+                className="px-1.5 py-0.5 flex items-center justify-between border-b border-slate-100 text-black font-medium"
               >
-                <span className="w-10 font-bold text-slate-900 truncate">{tx.token_no}</span>
-                <span className="flex-1 truncate px-1 text-slate-600">
+                <span className="w-10 font-black text-black truncate">{tx.token_no}</span>
+                <span className="flex-1 truncate px-1 text-black font-bold">
                   {tx.items[0]?.item_name || tx.customer_ref || 'Counter Bill'}
                 </span>
-                <span className="w-8 text-center font-bold text-[8px]">
+                <span className="w-8 text-center font-black text-[8px]">
                   {tx.payment_mode}
                 </span>
-                <span className="w-12 text-right font-bold text-slate-900">{formatINR(tx.grand_total)}</span>
+                <span className="w-12 text-right font-black text-black">{formatINR(tx.grand_total)}</span>
               </div>
             ))
           )}
@@ -195,21 +195,21 @@ export const DaybookCard: React.FC<DaybookCardProps> = ({
         {/* Floating badge */}
         <div className="flex items-center justify-between mt-1">
           {isToday ? (
-            <span className="bg-sky-600 text-white text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-xs border border-sky-400/40">
-              LIVE REGISTER
+            <span className="bg-black text-white text-[9px] font-mono font-black px-1.5 py-0.2 rounded-xs border border-black">
+              நேரலை / LIVE
             </span>
           ) : isYesterday ? (
-            <span className="bg-slate-800 text-white text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-xs border border-slate-700">
-              YESTERDAY
+            <span className="bg-slate-800 text-white text-[9px] font-mono font-black px-1.5 py-0.2 rounded-xs border border-slate-700">
+              நேற்று / YESTERDAY
             </span>
           ) : (
-            <span className="bg-slate-700 text-slate-200 text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-xs">
-              ARCHIVE
+            <span className="bg-slate-700 text-white text-[9px] font-mono font-black px-1.5 py-0.2 rounded-xs">
+              பழைய பதிவு / ARCHIVE
             </span>
           )}
 
-          <span className="text-[9px] font-mono font-semibold bg-white text-slate-600 px-1 py-0.2 rounded-xs border border-slate-200">
-            {entriesCount} {entriesCount === 1 ? 'row' : 'rows'}
+          <span className="text-[9px] font-mono font-black bg-white text-black px-1 py-0.2 rounded-xs border border-slate-300">
+            {entriesCount} பதிவுகள்
           </span>
         </div>
       </div>
@@ -219,11 +219,11 @@ export const DaybookCard: React.FC<DaybookCardProps> = ({
         <div>
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h4 className="text-xs font-bold text-slate-900 group-hover:text-sky-700 transition-colors truncate">
-                Daybook — {formatDateDisplay(dateStr)}
+              <h4 className="text-xs font-black text-black truncate leading-tight">
+                நாள் பதிவேடு — {formatDateDisplay(dateStr)}
               </h4>
-              <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5">
-                {isToday ? 'Live Master Ledger' : isYesterday ? 'Closed Day Record' : 'Past Register File'}
+              <p className="text-[10px] text-slate-800 font-bold font-mono truncate mt-0.5">
+                {isToday ? 'இன்றைய பதிவு (Today Ledger)' : isYesterday ? 'நேற்றைய பதிவு (Yesterday)' : 'பழைய பதிவு (Past Record)'}
               </p>
             </div>
 

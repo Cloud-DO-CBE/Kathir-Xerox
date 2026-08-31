@@ -297,50 +297,50 @@ export default function HomePage() {
               </div>
 
               {/* Master Cards: Today's Book Hero + Action Cards (Light Theme + Transparent Grid) */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-                {/* HERO CARD: "TODAY'S BOOK" (Light Glassmorphic Merchant Card) */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 text-black">
+                {/* HERO CARD: "TODAY'S BOOK" */}
                 <div 
                   onClick={() => handleOpenDaybook(todayStr)}
-                  className="md:col-span-6 lg:col-span-5 bg-white/95 backdrop-blur-md rounded-xs p-4 text-slate-900 shadow-xs border border-sky-300 hover:border-sky-500 transition-all duration-150 cursor-pointer relative overflow-hidden group flex flex-col justify-between"
+                  className="md:col-span-6 lg:col-span-5 bg-white rounded-xs p-4 text-black shadow-xs border border-slate-300 hover:border-black transition-all duration-150 cursor-pointer relative overflow-hidden group flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider bg-sky-50 border border-sky-200 px-1.5 py-0.2 rounded-xs text-sky-800">
-                          TODAY&apos;S MASTER BOOK
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span className="text-[10px] font-mono font-black uppercase tracking-wider bg-black text-white px-1.5 py-0.5 rounded-xs">
+                          இன்றைய முதன்மை பதிவேடு
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-slate-500">
-                        {todayTransactions.length} ENTRIES
+                      <span className="text-[10px] font-mono font-black text-black">
+                        {todayTransactions.length} பதிவுகள்
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 leading-tight">
-                      Today&apos;s Book (இன்றைய நாள்)
+                    <h3 className="font-serif text-2xl sm:text-3xl font-black tracking-tight text-black leading-tight">
+                      இன்றைய பதிவேடு
                     </h3>
-                    <p className="text-xs font-mono text-slate-500 mt-0.5">
-                      {formatDateDisplay(todayStr)}
+                    <p className="text-xs font-bold text-slate-800 font-mono mt-0.5">
+                      Today&apos;s Daybook • {formatDateDisplay(todayStr)}
                     </p>
 
                     {/* Live Tally Breakdown */}
-                    <div className="mt-3 pt-2.5 border-t border-slate-200 grid grid-cols-3 gap-2 text-center font-mono">
-                      <div className="bg-slate-50 rounded-xs p-1.5 border border-slate-200">
-                        <p className="text-[9px] text-slate-500 uppercase font-semibold">Gross</p>
-                        <p className="font-bold text-sm sm:text-base text-slate-900">
+                    <div className="mt-3 pt-2.5 border-t border-slate-300 grid grid-cols-3 gap-2 text-center font-mono">
+                      <div className="bg-slate-100 rounded-xs p-1.5 border border-slate-300">
+                        <p className="text-[9px] text-black uppercase font-black">மொத்தம் / Gross</p>
+                        <p className="font-black text-sm sm:text-base text-black">
                           {formatINR(totalGrossToday)}
                         </p>
                       </div>
-                      <div className="bg-emerald-50/70 rounded-xs p-1.5 border border-emerald-200">
-                        <p className="text-[9px] text-emerald-700 uppercase font-semibold">Cash</p>
-                        <p className="font-bold text-sm sm:text-base text-emerald-800">
+                      <div className="bg-emerald-100 rounded-xs p-1.5 border border-emerald-300">
+                        <p className="text-[9px] text-black uppercase font-black">ரொக்கம் / Cash</p>
+                        <p className="font-black text-sm sm:text-base text-black">
                           {formatINR(totalCashToday)}
                         </p>
                       </div>
-                      <div className="bg-sky-50/70 rounded-xs p-1.5 border border-sky-200">
-                        <p className="text-[9px] text-sky-700 uppercase font-semibold">UPI</p>
-                        <p className="font-bold text-sm sm:text-base text-sky-800">
+                      <div className="bg-sky-100 rounded-xs p-1.5 border border-sky-300">
+                        <p className="text-[9px] text-black uppercase font-black">ஜிபே / UPI</p>
+                        <p className="font-black text-sm sm:text-base text-black">
                           {formatINR(totalUpiToday)}
                         </p>
                       </div>
@@ -348,12 +348,12 @@ export default function HomePage() {
                   </div>
 
                   {/* Bottom CTA Action Button */}
-                  <div className="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs font-mono font-semibold text-sky-700 group-hover:text-sky-900 flex items-center gap-1 transition-colors">
-                      <span>OPEN LIVE SPREADSHEET</span>
+                  <div className="mt-4 pt-2 border-t border-slate-200 flex items-center justify-between">
+                    <span className="text-xs font-mono font-black text-black flex items-center gap-1">
+                      <span>பதிவேட்டை திற / OPEN SPREADSHEET</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </span>
-                    <div className="w-6 h-6 rounded-xs bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                    <div className="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center font-black text-xs">
                       <Plus className="w-4 h-4" />
                     </div>
                   </div>
@@ -364,22 +364,22 @@ export default function HomePage() {
                   {/* 1. Fast Counter POS */}
                   <div 
                     onClick={() => setIsPosModalOpen(true)}
-                    className="bg-white/90 hover:bg-white border border-slate-200/90 hover:border-slate-400 rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
+                    className="bg-white hover:bg-slate-50 border border-slate-300 hover:border-black rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-7 h-7 rounded-xs bg-sky-50 text-sky-700 flex items-center justify-center font-bold text-xs border border-sky-200">
+                      <div className="w-7 h-7 rounded-xs bg-slate-100 text-black flex items-center justify-center font-black text-xs border border-slate-300">
                         <Calculator className="w-4 h-4" />
                       </div>
-                      <span className="text-[9px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200 px-1 py-0.2 rounded-xs">
+                      <span className="text-[9px] font-mono font-black bg-black text-white px-1.5 py-0.2 rounded-xs">
                         F2
                       </span>
                     </div>
                     <div className="mt-2">
-                      <h4 className="font-serif text-sm sm:text-base font-bold text-slate-900 group-hover:text-sky-700 transition-colors">
-                        POS Counter Billing
+                      <h4 className="font-serif text-sm sm:text-base font-black text-black">
+                        பில்லிங் கவுண்டர் (POS)
                       </h4>
-                      <p className="text-[10px] text-slate-500 font-sans mt-0.5">
-                        Multi-item thermal bill slip counter
+                      <p className="text-[10px] text-slate-800 font-bold mt-0.5">
+                        POS Counter Billing • Slip Receipt
                       </p>
                     </div>
                   </div>
@@ -387,22 +387,22 @@ export default function HomePage() {
                   {/* 2. Quick 1-Line Entry */}
                   <div 
                     onClick={() => handleOpenDaybook(todayStr)}
-                    className="bg-white/90 hover:bg-white border border-slate-200/90 hover:border-slate-400 rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
+                    className="bg-white hover:bg-slate-50 border border-slate-300 hover:border-black rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-7 h-7 rounded-xs bg-amber-50 text-amber-700 flex items-center justify-center font-bold text-xs border border-amber-200">
+                      <div className="w-7 h-7 rounded-xs bg-slate-100 text-black flex items-center justify-center font-black text-xs border border-slate-300">
                         <Zap className="w-4 h-4" />
                       </div>
-                      <span className="text-[9px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200 px-1 py-0.2 rounded-xs">
+                      <span className="text-[9px] font-mono font-black bg-black text-white px-1.5 py-0.2 rounded-xs">
                         QUICK
                       </span>
                     </div>
                     <div className="mt-2">
-                      <h4 className="font-serif text-sm sm:text-base font-bold text-slate-900 group-hover:text-amber-700 transition-colors">
-                        1-Line Rapid Entry
+                      <h4 className="font-serif text-sm sm:text-base font-black text-black">
+                        உடனடி பதிவு (Quick Entry)
                       </h4>
-                      <p className="text-[10px] text-slate-500 font-sans mt-0.5">
-                        Instant keyboard row logging
+                      <p className="text-[10px] text-slate-800 font-bold mt-0.5">
+                        1-Line Rapid Keyboard Logging
                       </p>
                     </div>
                   </div>
@@ -410,22 +410,22 @@ export default function HomePage() {
                   {/* 3. 9:00 PM WhatsApp Digest */}
                   <div 
                     onClick={() => { setDigestDate(todayStr); setIsDigestOpen(true); }}
-                    className="bg-white/90 hover:bg-white border border-slate-200/90 hover:border-slate-400 rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
+                    className="bg-white hover:bg-slate-50 border border-slate-300 hover:border-black rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-7 h-7 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs border border-emerald-200">
+                      <div className="w-7 h-7 rounded-xs bg-slate-100 text-black flex items-center justify-center font-black text-xs border border-slate-300">
                         <MessageSquare className="w-4 h-4" />
                       </div>
-                      <span className="text-[9px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200 px-1 py-0.2 rounded-xs">
+                      <span className="text-[9px] font-mono font-black bg-black text-white px-1.5 py-0.2 rounded-xs">
                         9 PM
                       </span>
                     </div>
                     <div className="mt-2">
-                      <h4 className="font-serif text-sm sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">
-                        WhatsApp Digest
+                      <h4 className="font-serif text-sm sm:text-base font-black text-black">
+                        வாட்ஸ்அப் அறிக்கை
                       </h4>
-                      <p className="text-[10px] text-slate-500 font-sans mt-0.5">
-                        Daily closing summary report
+                      <p className="text-[10px] text-slate-800 font-bold mt-0.5">
+                        Daily WhatsApp Digest Report
                       </p>
                     </div>
                   </div>
@@ -433,22 +433,22 @@ export default function HomePage() {
                   {/* 4. Export Excel Daybook */}
                   <div 
                     onClick={() => { setExportDate(todayStr); setIsExportOpen(true); }}
-                    className="bg-white/90 hover:bg-white border border-slate-200/90 hover:border-slate-400 rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
+                    className="bg-white hover:bg-slate-50 border border-slate-300 hover:border-black rounded-xs p-3 cursor-pointer transition-all shadow-2xs flex flex-col justify-between group"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="w-7 h-7 rounded-xs bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-xs border border-indigo-200">
+                      <div className="w-7 h-7 rounded-xs bg-slate-100 text-black flex items-center justify-center font-black text-xs border border-slate-300">
                         <Download className="w-4 h-4" />
                       </div>
-                      <span className="text-[9px] font-mono font-bold bg-slate-100 text-slate-700 border border-slate-200 px-1 py-0.2 rounded-xs">
+                      <span className="text-[9px] font-mono font-black bg-black text-white px-1.5 py-0.2 rounded-xs">
                         XLSX
                       </span>
                     </div>
                     <div className="mt-2">
-                      <h4 className="font-serif text-sm sm:text-base font-bold text-slate-900 group-hover:text-indigo-700 transition-colors">
-                        Export Spreadsheet
+                      <h4 className="font-serif text-sm sm:text-base font-black text-black">
+                        எக்செல் பதிவிறக்கம்
                       </h4>
-                      <p className="text-[10px] text-slate-500 font-sans mt-0.5">
-                        Download backup excel .xlsx
+                      <p className="text-[10px] text-slate-800 font-bold mt-0.5">
+                        Export Daybooks (.xlsx Backup)
                       </p>
                     </div>
                   </div>
@@ -458,13 +458,13 @@ export default function HomePage() {
               {/* SECTION 2: Recent Daybooks Archive */}
               <div className="pt-2">
                 {/* Controls Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-200 mb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-300 mb-3 text-black">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-slate-900">
-                      Recent Daybooks (சமீபத்திய நாள் பதிவேடுகள்)
+                    <h3 className="font-serif text-base sm:text-lg font-black text-black">
+                      சமீபத்திய நாள் பதிவேடுகள் (Recent Daybooks)
                     </h3>
-                    <span className="text-[10px] font-mono bg-slate-200 text-slate-800 px-1.5 py-0.2 rounded-xs font-bold">
-                      {availableDates.length} LOGGED
+                    <span className="text-[10px] font-mono bg-black text-white px-1.5 py-0.2 rounded-xs font-black">
+                      {availableDates.length} பதிவுகள்
                     </span>
                   </div>
 

@@ -105,15 +105,15 @@ export const GoogleDocsHeader: React.FC<GoogleDocsHeaderProps> = ({
             <ShopLogo size="sm" />
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-serif text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-none">
-                  Kathir Xerox
+                <span className="font-serif text-lg sm:text-xl font-black text-black tracking-tight leading-none">
+                  கதிர் ஜெராக்ஸ்
                 </span>
-                <span className="hidden sm:inline-block bg-sky-50 text-sky-800 text-[10px] font-mono font-bold px-1.5 py-0.2 rounded-xs border border-sky-200">
-                  DAYBOOK
+                <span className="hidden sm:inline-block bg-black text-white text-[10px] font-mono font-black px-1.5 py-0.5 rounded-xs border border-black">
+                  பதிவேடு
                 </span>
               </div>
-              <p className="text-[10px] text-slate-500 font-sans leading-none mt-0.5 hidden sm:block">
-                கதிர் ஜெராக்ஸ் & இ-சேவை மையம் • POS & Ledger
+              <p className="text-[10px] text-black font-semibold leading-none mt-0.5 hidden sm:block">
+                Kathir Xerox & E-Service Centre • POS & Daybook
               </p>
             </div>
           </div>

@@ -261,50 +261,52 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
             )}
 
             {/* List of services with editable unit price */}
-            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1 text-black">
               {items.map((item) => (
                 <div
                   key={item.id}
                   className={`p-2.5 rounded-xl border flex items-center justify-between gap-3 text-xs ${
-                    item.is_active ? 'bg-white border-slate-200' : 'bg-slate-100 border-slate-300 opacity-60'
+                    item.is_active ? 'bg-white border-slate-300' : 'bg-slate-100 border-slate-300 opacity-60'
                   }`}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-slate-100 border border-slate-200 text-black px-1.5 py-0.2 rounded">
                         {item.category}
                       </span>
-                      <span className="font-semibold text-slate-900 truncate">
-                        {item.name}
+                      {/* Tamil Name First (Bold Black) */}
+                      <span className="font-black text-black truncate text-xs">
+                        {item.name_ta || item.name}
                       </span>
                     </div>
+                    {/* English Name Below (Clear Black) */}
                     {item.name_ta && (
-                      <div className="text-[11px] text-slate-500 truncate mt-0.5">
-                        {item.name_ta}
+                      <div className="text-[11px] text-slate-800 font-bold truncate mt-0.5 pl-0.5">
+                        {item.name}
                       </div>
                     )}
                   </div>
 
                   {/* Editable Price Input */}
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-slate-400 font-mono">₹</span>
+                    <span className="text-[11px] text-black font-mono font-black">₹</span>
                     <input
                       type="number"
                       value={item.default_unit_price}
                       onChange={(e) => handlePriceChange(item.id, parseFloat(e.target.value) || 0)}
-                      className="w-16 bg-slate-50 border border-slate-300 rounded px-1.5 py-1 text-right font-mono font-bold text-slate-900 text-xs focus:bg-white focus:border-emerald-500 outline-none"
+                      className="w-16 bg-white border border-slate-400 rounded px-1.5 py-1 text-right font-mono font-black text-black text-xs focus:border-black outline-none"
                     />
-                    <span className="text-[10px] text-slate-400 w-8 truncate">
+                    <span className="text-[10px] text-black font-bold w-8 truncate">
                       /{item.unit_label || 'unit'}
                     </span>
 
                     <button
                       type="button"
                       onClick={() => handleToggleActive(item.id)}
-                      className={`text-[10px] font-bold px-2 py-1 rounded transition-colors ${
+                      className={`text-[10px] font-black px-2 py-1 rounded transition-colors border ${
                         item.is_active
-                          ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                          : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+                          ? 'bg-emerald-100 text-emerald-950 border-emerald-300 hover:bg-emerald-200'
+                          : 'bg-slate-200 text-black border-slate-300 hover:bg-slate-300'
                       }`}
                     >
                       {item.is_active ? 'Active' : 'Disabled'}
@@ -312,9 +314,9 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
 
                     <button
                       type="button"
-                      onClick={() => handleDeleteItem(item.id, item.name)}
+                      onClick={() => handleDeleteItem(item.id, item.name_ta || item.name)}
                       title="Delete / Remove Item"
-                      className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      className="p-1 text-slate-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

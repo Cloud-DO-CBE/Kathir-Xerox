@@ -47,43 +47,43 @@ export const GoogleSidePanel: React.FC<GoogleSidePanelProps> = ({
   const navItems = [
     {
       href: '/',
-      label: 'All Daybooks Hub',
       labelTa: 'அனைத்து பதிவேடுகள்',
+      label: 'All Daybooks Register',
       icon: FileSpreadsheet,
       badge: 'Hub',
     },
     {
       href: '/pos',
+      labelTa: 'பில்லிங் கவுண்டர் (POS)',
       label: 'POS Counter Billing',
-      labelTa: 'பில்லிங் கவுண்டர்',
       icon: Calculator,
       isSpecial: true,
       shortcut: 'F2',
     },
     {
       href: '/analytics',
-      label: 'Analytics & Insights',
       labelTa: 'விற்பனை ஆய்வுகள்',
+      label: 'Analytics & Insights',
       icon: BarChart3,
     },
     {
       href: '/archive',
-      label: 'Date Archive Ledger',
       labelTa: 'பழைய பதிவுகள்',
+      label: 'Date Archive Ledger',
       icon: CalendarRange,
     },
     {
       href: '/dues',
-      label: 'Customer Dues (பாக்கி)',
       labelTa: 'வாடிக்கையாளர் பாக்கி',
+      label: 'Customer Dues Ledger',
       icon: BookUser,
       badge: pendingDuesCount > 0 ? `${pendingDuesCount} Due` : undefined,
-      badgeColor: 'bg-amber-100 text-amber-900 border border-amber-300',
+      badgeColor: 'bg-amber-200 text-black border border-amber-400 font-bold',
     },
     {
       href: '/services',
-      label: 'Services & Pricing',
-      labelTa: 'சேவை கட்டணங்கள்',
+      labelTa: 'விலை பட்டியல் மேலாண்மை',
+      label: 'Services & Pricing Catalog',
       icon: Settings,
     },
   ];
@@ -100,22 +100,22 @@ export const GoogleSidePanel: React.FC<GoogleSidePanelProps> = ({
 
       {/* Side Panel Drawer (Light Glassmorphic Theme) */}
       <aside 
-        className={`fixed md:sticky top-0 md:top-[49px] bottom-0 left-0 z-50 md:z-20 w-64 bg-white/80 backdrop-blur-md border-r border-slate-200/90 transition-all duration-200 ease-in-out flex flex-col h-screen md:h-[calc(100vh-49px)] overflow-hidden shadow-xl md:shadow-none text-slate-800 ${
+        className={`fixed md:sticky top-0 md:top-[49px] bottom-0 left-0 z-50 md:z-20 w-64 bg-white backdrop-blur-md border-r border-slate-300 transition-all duration-200 ease-in-out flex flex-col h-screen md:h-[calc(100vh-49px)] overflow-hidden shadow-xl md:shadow-none text-black ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:-translate-x-64 md:w-0 md:border-r-0'
         }`}
       >
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-3 border-b border-slate-200 bg-white">
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-slate-300 bg-white">
           <div className="flex items-center gap-2.5">
             <ShopLogo size="xs" />
             <div>
-              <span className="font-serif font-bold text-slate-900 text-sm">Kathir Xerox</span>
-              <p className="text-[9px] text-slate-500 font-sans">கதிர் ஜெராக்ஸ் • Daybook</p>
+              <span className="font-serif font-black text-black text-sm">கதிர் ஜெராக்ஸ்</span>
+              <p className="text-[9px] text-black font-semibold">Kathir Xerox • Daybook</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="p-1 rounded-xs text-slate-400 hover:text-slate-800 hover:bg-slate-100"
+            className="p-1 rounded-xs text-black hover:bg-slate-100"
           >
             <X className="w-4 h-4" />
           </button>
@@ -130,18 +130,18 @@ export const GoogleSidePanel: React.FC<GoogleSidePanelProps> = ({
                 if (onOpenPosModal) onOpenPosModal();
                 onClose();
               }}
-              className="w-full flex items-center justify-between px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xs text-xs font-bold transition-all border border-slate-800 shadow-2xs"
+              className="w-full flex items-center justify-between px-3 py-2 bg-black hover:bg-slate-800 text-white rounded-xs text-xs font-black transition-all border border-black shadow-2xs"
             >
               <div className="flex items-center gap-2">
-                <Calculator className="w-3.5 h-3.5 text-sky-400" />
-                <span>+ POS Counter Bill</span>
+                <Calculator className="w-3.5 h-3.5 text-white" />
+                <span>+ பில்லிங் கவுண்டர் (POS)</span>
               </div>
               <span className="text-[9px] bg-white/20 px-1 py-0.2 rounded-xs font-mono">F2</span>
             </button>
           </div>
 
-          <div className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider px-2 py-1">
-            MODULES & REGISTERS
+          <div className="text-[10px] font-mono font-black text-black uppercase tracking-wider px-2 py-1">
+            பிரிவுகள் / REGISTERS
           </div>
 
           {navItems.map((item) => {
@@ -154,25 +154,25 @@ export const GoogleSidePanel: React.FC<GoogleSidePanelProps> = ({
                 onClick={onClose}
                 className={`flex items-center justify-between px-2.5 py-2 rounded-xs text-xs font-medium transition-all group ${
                   isActive
-                    ? 'bg-sky-50 text-sky-950 font-bold border-l-2 border-sky-600 pl-2'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                    ? 'bg-slate-100 text-black font-black border-l-3 border-black pl-2'
+                    : 'text-black hover:text-black hover:bg-slate-100'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <Icon className={`w-4 h-4 transition-colors ${
-                    isActive ? 'text-sky-600' : 'text-slate-400 group-hover:text-slate-600'
+                    isActive ? 'text-black stroke-[2.5]' : 'text-black'
                   }`} />
                   <div>
-                    <p className="leading-tight text-xs">{item.label}</p>
-                    <p className="text-[9px] text-slate-400 leading-none mt-0.5 font-sans">
-                      {item.labelTa}
+                    <p className="leading-tight text-xs font-black text-black">{item.labelTa}</p>
+                    <p className="text-[9px] text-slate-800 font-semibold leading-none mt-0.5">
+                      {item.label}
                     </p>
                   </div>
                 </div>
 
                 {item.badge && (
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-xs ${
-                    item.badgeColor || (isActive ? 'bg-sky-100 text-sky-900 border border-sky-200' : 'bg-slate-100 text-slate-600 border border-slate-200')
+                  <span className={`text-[9px] font-mono font-black px-1.5 py-0.2 rounded-xs ${
+                    item.badgeColor || (isActive ? 'bg-black text-white' : 'bg-slate-200 text-black border border-slate-400')
                   }`}>
                     {item.badge}
                   </span>

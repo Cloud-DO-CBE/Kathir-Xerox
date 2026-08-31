@@ -58,89 +58,89 @@ export const DueTracker: React.FC<DueTrackerProps> = ({
   };
 
   return (
-    <div className="space-y-3">
-      {/* Top Banner (Light Glassmorphic Transparent) */}
-      <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-xs border border-amber-300 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-3 text-black">
+      {/* Top Banner */}
+      <div className="bg-white p-3.5 rounded-xs border border-amber-400 shadow-2xs flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xs bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200">
+          <div className="w-8 h-8 rounded-xs bg-amber-100 text-black flex items-center justify-center border border-amber-300">
             <BookUser className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="font-serif text-lg font-bold text-slate-900">
-              Customer Khata & Due Ledger (வாடிக்கையாளர் பாக்கி)
+            <h2 className="font-serif text-lg font-black text-black">
+              வாடிக்கையாளர் கடன் பாக்கி கணக்கு
             </h2>
-            <p className="text-[11px] text-slate-500 font-sans">
-              Track outstanding balances and send WhatsApp payment reminders
+            <p className="text-[11px] text-slate-800 font-bold">
+              Customer Khata & Due Ledger • WhatsApp Payment Reminders
             </p>
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-[10px] text-amber-800 font-mono font-bold uppercase tracking-wider block">
-            TOTAL OUTSTANDING
+          <span className="text-[10px] text-black font-mono font-black uppercase tracking-wider block">
+            மொத்த பாக்கி / TOTAL OUTSTANDING
           </span>
-          <span className="text-xl sm:text-2xl font-bold font-mono text-amber-700">
+          <span className="text-xl sm:text-2xl font-black font-mono text-black">
             {formatINR(totalOutstanding)}
           </span>
         </div>
       </div>
 
       {/* Search and List */}
-      <div className="bg-white/80 backdrop-blur-md rounded-xs border border-slate-200/90 shadow-2xs p-3">
+      <div className="bg-white rounded-xs border border-slate-300 shadow-2xs p-3">
         <div className="flex items-center justify-between mb-3 gap-2">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-black absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search customer name or mobile number..."
+              placeholder="பெயர் அல்லது போன் எண் தேடுக / Search customer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-xs text-xs outline-none focus:border-sky-500"
+              className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-400 rounded-xs text-xs font-bold text-black outline-none focus:border-black placeholder:text-slate-600"
             />
           </div>
-          <span className="text-xs font-mono text-slate-500">
-            {filtered.length} customers with pending balance
+          <span className="text-xs font-mono font-bold text-black">
+            {filtered.length} வாடிக்கையாளர்கள் ({filtered.length} customers)
           </span>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="py-8 text-center text-slate-400 text-xs font-mono">
-            No pending dues found
+          <div className="py-8 text-center text-black font-bold text-xs font-mono">
+            பாக்கி எதுவும் இல்லை / No pending dues
           </div>
         ) : (
-          <div className="divide-y divide-slate-200 border border-slate-200 rounded-xs overflow-hidden">
+          <div className="divide-y divide-slate-300 border border-slate-300 rounded-xs overflow-hidden">
             {filtered.map((customer) => (
               <div
                 key={customer.customer_ref}
-                className="p-3 bg-white/70 hover:bg-sky-50/50 flex flex-wrap items-center justify-between gap-3 transition-colors"
+                className="p-3 bg-white hover:bg-slate-50 flex flex-wrap items-center justify-between gap-3 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xs bg-amber-50 text-amber-800 flex items-center justify-center font-bold text-xs font-mono border border-amber-200">
+                  <div className="w-8 h-8 rounded-xs bg-amber-100 text-black flex items-center justify-center font-black text-xs font-mono border border-amber-300">
                     {customer.customer_ref.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h4 className="font-bold text-xs sm:text-sm text-slate-900 font-sans">
+                    <h4 className="font-black text-xs sm:text-sm text-black">
                       {customer.customer_ref}
                     </h4>
-                    <div className="flex items-center gap-2 text-[10px] font-mono text-slate-500 mt-0.5">
+                    <div className="flex items-center gap-2 text-[10px] font-mono font-bold text-black mt-0.5">
                       {customer.customer_phone ? (
-                        <span className="flex items-center gap-1 text-sky-700">
-                          <Phone className="w-3 h-3" />
+                        <span className="flex items-center gap-1 text-black font-black">
+                          <Phone className="w-3 h-3 text-black" />
                           {customer.customer_phone}
                         </span>
                       ) : (
-                        <span>No phone logged</span>
+                        <span className="text-slate-600">எண் இல்லை (No phone)</span>
                       )}
                       <span>•</span>
-                      <span>Last: {customer.transactions[0]?.date ? formatDateDisplay(customer.transactions[0].date) : 'Pending'}</span>
+                      <span>கடைசி: {customer.transactions[0]?.date ? formatDateDisplay(customer.transactions[0].date) : 'Pending'}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <span className="text-[10px] font-mono uppercase text-slate-400 font-semibold block">Pending Due</span>
-                    <span className="text-sm sm:text-base font-bold font-mono text-amber-700">
+                    <span className="text-[10px] font-mono uppercase text-slate-800 font-bold block">பாக்கி தொகை / Due</span>
+                    <span className="text-sm sm:text-base font-black font-mono text-black">
                       {formatINR(customer.total_due)}
                     </span>
                   </div>
@@ -148,19 +148,19 @@ export const DueTracker: React.FC<DueTrackerProps> = ({
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleSendReminder(customer)}
-                      className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xs text-xs font-mono font-bold flex items-center gap-1 transition-colors border border-emerald-200"
+                      className="px-2.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-black rounded-xs text-xs font-mono font-black flex items-center gap-1 transition-colors border border-emerald-400"
                       title="Send WhatsApp Reminder"
                     >
-                      <Send className="w-3 h-3" />
-                      <span className="hidden sm:inline">Remind</span>
+                      <Send className="w-3 h-3 text-black" />
+                      <span>நினைவூட்டு / Remind</span>
                     </button>
 
                     <button
                       onClick={() => handleOpenSettle(customer)}
-                      className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xs text-xs font-mono font-bold flex items-center gap-1 transition-all active:scale-95 border border-slate-900 shadow-2xs"
+                      className="px-3 py-1.5 bg-black hover:bg-slate-800 text-white rounded-xs text-xs font-mono font-black flex items-center gap-1 transition-all active:scale-95 border border-black shadow-2xs"
                     >
                       <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                      <span>Settle Due</span>
+                      <span>வசூல் / Settle</span>
                     </button>
                   </div>
                 </div>
