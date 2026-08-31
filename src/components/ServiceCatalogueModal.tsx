@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   CheckCircle2,
   Lock,
-  KeyRound
+  KeyRound,
+  Trash2
 } from 'lucide-react';
 import { ServiceItem, ServiceCategory } from '@/types';
 import { formatINR } from '@/lib/formatters';
@@ -67,6 +68,14 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, is_active: !item.is_active } : item))
     );
+  };
+
+  const handleDeleteItem = (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to remove "${name}" from the catalogue?`)) {
+      db.deleteService(id);
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      onSaveServices(items.filter((item) => item.id !== id));
+    }
   };
 
   const handleAddNewItem = (e: React.FormEvent) => {
@@ -290,6 +299,7 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
                     </span>
 
                     <button
+                      type="button"
                       onClick={() => handleToggleActive(item.id)}
                       className={`text-[10px] font-bold px-2 py-1 rounded transition-colors ${
                         item.is_active
@@ -298,6 +308,15 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
                       }`}
                     >
                       {item.is_active ? 'Active' : 'Disabled'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteItem(item.id, item.name)}
+                      title="Delete / Remove Item"
+                      className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

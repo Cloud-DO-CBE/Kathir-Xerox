@@ -54,6 +54,16 @@ export const db = {
     localStorage.setItem(STORAGE_KEY_SERVICES, JSON.stringify(services));
   },
 
+  deleteService(id: string) {
+    if (typeof window === 'undefined') return;
+    const current = this.getServices();
+    const filtered = current.filter((s) => s.id !== id);
+    localStorage.setItem(STORAGE_KEY_SERVICES, JSON.stringify(filtered));
+    fetch(`/api/services?id=${encodeURIComponent(id)}`, { method: 'DELETE' }).catch((err) => {
+      console.warn('Could not delete service from API:', err);
+    });
+  },
+
   getTransactions(): Transaction[] {
     if (typeof window === 'undefined') return [];
     try {

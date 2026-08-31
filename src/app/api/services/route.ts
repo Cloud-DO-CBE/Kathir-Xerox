@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { INITIAL_SERVICES } from "@/lib/initialData";
 
@@ -53,6 +53,32 @@ export async function POST(req: Request) {
     return NextResponse.json(service);
   } catch (error: any) {
     console.error("Error saving service:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Service id is required" }, { status: 400 });
+    }
+
+    // Set service_id to null in any transaction items referencing this service before deleting
+    await prisma.transactionItem.updateMany({
+      where: { service_id: id },
+      data: { service_id: null },
+    });
+
+    await prisma.service.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true, message: "Service deleted successfully" });
+  } catch (error: any) {
+    console.error("Error deleting service:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

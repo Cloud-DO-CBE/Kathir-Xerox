@@ -9,7 +9,7 @@ import { ServiceCatalogueModal } from '@/components/ServiceCatalogueModal';
 import { db } from '@/lib/db';
 import { ServiceItem, Transaction, DueCustomer, ServiceCategory } from '@/types';
 import { getTodayDateString, formatINR } from '@/lib/formatters';
-import { Settings, Plus, Save, ArrowLeft } from 'lucide-react';
+import { Settings, Plus, Save, ArrowLeft, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ServicesPage() {
@@ -40,6 +40,13 @@ export default function ServicesPage() {
     setServices((prev) =>
       prev.map((s) => (s.id === id ? { ...s, default_unit_price: newPrice } : s))
     );
+  };
+
+  const handleDeleteService = (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to remove "${name}" from the catalogue?`)) {
+      db.deleteService(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
+    }
   };
 
   const handleSave = () => {
@@ -160,6 +167,14 @@ export default function ServicesPage() {
                             <span className="text-[10px] text-slate-400 font-mono w-10 truncate">
                               /{item.unit_label || 'unit'}
                             </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteService(item.id, item.name)}
+                              title="Delete / Remove Item"
+                              className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                           </div>
                         </div>
                       ))}
