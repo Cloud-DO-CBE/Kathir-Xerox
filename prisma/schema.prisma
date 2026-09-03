@@ -2,13 +2,13 @@
 // Supports both PostgreSQL and MySQL database providers
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model DailyBook {
@@ -98,7 +98,7 @@ model ShopSettings {
   owner_whatsapp      String?  @default("9842100000")
   upi_id              String?  @default("kathirxerox@okaxis")
   address             String?  @default("Next to SNS complex, Perumal temple street , Senjeriputhur")
-  access_password     String   @default("RX135")
+  access_password     String   @default("")
   enable_auto_digest  Boolean  @default(true)
   updated_at          DateTime @updatedAt
 

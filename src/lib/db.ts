@@ -27,7 +27,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   ownerWhatsApp: '9842100000',
   upiId: 'kathirxerox@okaxis',
   address: 'Next to SNS complex, Perumal temple street , Senjeriputhur',
-  accessPassword: 'RX135',
+  accessPassword: '',
   enableAutoDigest: true,
   enableAutoWhatsAppTx: false,
   autoWhatsAppTarget: 'CUSTOMER_AND_OWNER',

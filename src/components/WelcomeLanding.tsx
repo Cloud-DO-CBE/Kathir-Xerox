@@ -64,13 +64,14 @@ export const WelcomeLanding: React.FC<WelcomeLandingProps> = ({ onUnlockSuccess 
       setIsModalOpen(false);
       onUnlockSuccess();
     } catch (err: any) {
-      // Offline fallback check: default RX135
-      if (password.trim() === 'RX135') {
+      // Offline fallback: accept the env-configured password
+      const fallbackPassword = process.env.NEXT_PUBLIC_ACCESS_PASSWORD || '';
+      if (fallbackPassword && password.trim() === fallbackPassword.trim()) {
         localStorage.setItem('kx_session_auth', 'true');
         setIsModalOpen(false);
         onUnlockSuccess();
       } else {
-        setError(err.message || 'Incorrect password. Please try again.');
+        setError('Incorrect password. Please try again.');
         setIsLoading(false);
       }
     }

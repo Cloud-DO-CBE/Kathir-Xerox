@@ -5,6 +5,9 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
+  experimental: {
+    serverComponentsExternalPackages: ['ws', '@prisma/client', '@neondatabase/serverless'],
+  },
 };
 
 export default nextConfig;

@@ -15,6 +15,7 @@ import { PosCounter } from '@/components/PosCounter';
 import { AutoWhatsAppToast } from '@/components/AutoWhatsAppToast';
 import { WelcomeLanding } from '@/components/WelcomeLanding';
 import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { ServiceItem, Transaction, PaymentMode, DueCustomer } from '@/types';
 import { getTodayDateString, formatDateDisplay, formatINR } from '@/lib/formatters';
 import { triggerAutoWhatsAppMessage } from '@/lib/whatsappUtils';
@@ -78,6 +79,23 @@ export default function HomePage() {
     setServices(db.getServices());
     setAllTransactions(db.getTransactions());
     setDueCustomers(db.getDueCustomers());
+
+    async function loadData() {
+      try {
+        await api.syncOfflineData();
+        const [remoteServices, remoteTxs, remoteDues] = await Promise.all([
+          api.getServices(),
+          api.getTransactions(),
+          api.getDueCustomers(),
+        ]);
+        if (remoteServices && remoteServices.length > 0) setServices(remoteServices);
+        if (remoteTxs) setAllTransactions(remoteTxs);
+        if (remoteDues) setDueCustomers(remoteDues);
+      } catch (err) {
+        console.warn('Could not sync with Neon DB, using local data', err);
+      }
+    }
+    loadData();
   }, []);
 
   const todayTransactions = allTransactions.filter(
@@ -128,7 +146,7 @@ export default function HomePage() {
       return 0;
     });
 
-  const handleAddQuickTransaction = (entry: {
+  const handleAddQuickTransaction = async (entry: {
     service: ServiceItem;
     quantity: number;
     unitPrice: number;
@@ -146,7 +164,7 @@ export default function HomePage() {
     else if (entry.paymentMode === 'UPI') upiAmt = subtotal;
     else if (entry.paymentMode === 'DUE') dueAmt = subtotal;
 
-    const newTx = db.addTransaction({
+    await api.createTransaction({
       payment_mode: entry.paymentMode,
       customer_ref: entry.customerRef,
       customer_phone: entry.customerPhone,
@@ -170,12 +188,16 @@ export default function HomePage() {
       ],
     });
 
-    setAllTransactions(db.getTransactions());
-    setDueCustomers(db.getDueCustomers());
+    const [updatedTxs, updatedDues] = await Promise.all([
+      api.getTransactions(),
+      api.getDueCustomers(),
+    ]);
+    setAllTransactions(updatedTxs);
+    setDueCustomers(updatedDues);
   };
 
-  const handleCompletePosOrder = (order: any, printBill?: boolean) => {
-    const newTx = db.addTransaction({
+  const handleCompletePosOrder = async (order: any, printBill?: boolean) => {
+    const newTx = await api.createTransaction({
       payment_mode: order.paymentMode,
       customer_ref: order.customerRef,
       customer_phone: order.customerPhone,
@@ -197,8 +219,12 @@ export default function HomePage() {
       })),
     });
 
-    setAllTransactions(db.getTransactions());
-    setDueCustomers(db.getDueCustomers());
+    const [updatedTxs, updatedDues] = await Promise.all([
+      api.getTransactions(),
+      api.getDueCustomers(),
+    ]);
+    setAllTransactions(updatedTxs);
+    setDueCustomers(updatedDues);
     setIsPosModalOpen(false);
 
     if (printBill) {
@@ -212,15 +238,22 @@ export default function HomePage() {
     setDueCustomers(db.getDueCustomers());
   };
 
-  const handleDeleteTransaction = (id: string) => {
-    db.deleteTransaction(id);
-    setAllTransactions(db.getTransactions());
-    setDueCustomers(db.getDueCustomers());
+  const handleDeleteTransaction = async (id: string) => {
+    await api.deleteTransaction(id);
+    const [updatedTxs, updatedDues] = await Promise.all([
+      api.getTransactions(),
+      api.getDueCustomers(),
+    ]);
+    setAllTransactions(updatedTxs);
+    setDueCustomers(updatedDues);
   };
 
-  const handleSaveServices = (updated: ServiceItem[]) => {
+  const handleSaveServices = async (updated: ServiceItem[]) => {
     db.saveServices(updated);
     setServices(updated);
+    for (const s of updated) {
+      await api.saveService(s).catch(console.warn);
+    }
   };
 
   const handleOpenDaybook = (dateStr: string) => {

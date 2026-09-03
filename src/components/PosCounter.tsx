@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useCustomerSearch } from '@/lib/useCustomerSearch';
 import { 
   Plus, 
   Minus, 
@@ -63,6 +64,9 @@ export const PosCounter: React.FC<PosCounterProps> = ({
   const [customerRef, setCustomerRef] = useState<string>('');
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const customerInputRef = useRef<HTMLInputElement>(null);
+  const { suggestions, isLoading, search, clearSuggestions } = useCustomerSearch();
 
   // Categories list
   const categories: { key: ServiceCategory | 'ALL'; labelTa: string; label: string }[] = [
@@ -387,16 +391,58 @@ export const PosCounter: React.FC<PosCounterProps> = ({
             </div>
           )}
 
-          {/* Customer Details */}
+          {/* Customer Details with Autocomplete */}
           <div className="space-y-1.5 mb-3">
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <input
-                type="text"
-                placeholder="வாடிக்கையாளர் பெயர் / Customer Name"
-                value={customerRef}
-                onChange={(e) => setCustomerRef(e.target.value)}
-                className="bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-black placeholder:text-slate-600 outline-none focus:border-black"
-              />
+              {/* Customer Name with Autocomplete */}
+              <div className="relative">
+                <input
+                  ref={customerInputRef}
+                  type="text"
+                  placeholder="வாடிக்கையாளர் பெயர் / Customer Name"
+                  value={customerRef}
+                  autoComplete="off"
+                  onChange={(e) => {
+                    setCustomerRef(e.target.value);
+                    search(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => {
+                    if (customerRef.length >= 1) {
+                      search(customerRef);
+                      setShowSuggestions(true);
+                    }
+                  }}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 font-medium text-black placeholder:text-slate-600 outline-none focus:border-black"
+                />
+                {/* Suggestions Dropdown */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute z-50 top-full mt-0.5 left-0 right-0 bg-white border border-slate-300 rounded-lg shadow-lg overflow-hidden">
+                    {isLoading && (
+                      <div className="px-3 py-1.5 text-[10px] text-slate-400 font-mono">Searching...</div>
+                    )}
+                    {suggestions.map((s, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onMouseDown={() => {
+                          setCustomerRef(s.name);
+                          if (s.phone) setCustomerPhone(s.phone);
+                          clearSuggestions();
+                          setShowSuggestions(false);
+                        }}
+                        className="w-full text-left px-3 py-2 hover:bg-slate-100 border-b border-slate-100 last:border-0 transition-colors"
+                      >
+                        <div className="font-bold text-black text-xs">{s.name}</div>
+                        {s.phone && (
+                          <div className="text-[10px] text-slate-500 font-mono">{s.phone}</div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <input
                 type="tel"
                 placeholder="தொலைபேசி எண் / Phone"

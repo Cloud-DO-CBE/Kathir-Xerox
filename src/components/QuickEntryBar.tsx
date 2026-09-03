@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useCustomerSearch } from '@/lib/useCustomerSearch';
 import { 
   Plus, 
   Zap, 
@@ -37,7 +38,9 @@ export const QuickEntryBar: React.FC<QuickEntryBarProps> = ({
   const [customerRef, setCustomerRef] = useState<string>('');
   const [customerPhone, setCustomerPhone] = useState<string>('');
   const [showMoreDetails, setShowMoreDetails] = useState<boolean>(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const qtyInputRef = useRef<HTMLInputElement>(null);
+  const { suggestions, search, clearSuggestions } = useCustomerSearch();
 
   // Set default service
   useEffect(() => {
@@ -202,15 +205,49 @@ export const QuickEntryBar: React.FC<QuickEntryBarProps> = ({
         {/* Optional Customer Inputs */}
         {showMoreDetails && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-100/80 p-2 rounded-xs border border-slate-200">
-            <div className="flex items-center gap-2 bg-white px-2 py-1 rounded-xs border border-slate-300">
+            {/* Customer Name with Autocomplete */}
+            <div className="relative flex items-center gap-2 bg-white px-2 py-1 rounded-xs border border-slate-300">
               <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <input
                 type="text"
                 value={customerRef}
-                onChange={(e) => setCustomerRef(e.target.value)}
+                autoComplete="off"
+                onChange={(e) => {
+                  setCustomerRef(e.target.value);
+                  search(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => {
+                  if (customerRef.length >= 1) {
+                    search(customerRef);
+                    setShowSuggestions(true);
+                  }
+                }}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                 placeholder="Customer Name / Department"
                 className="w-full text-xs text-slate-900 outline-none"
               />
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 top-full mt-0.5 left-0 right-0 bg-white border border-slate-300 rounded shadow-lg overflow-hidden">
+                  {suggestions.map((s, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onMouseDown={() => {
+                        setCustomerRef(s.name);
+                        if (s.phone) setCustomerPhone(s.phone);
+                        clearSuggestions();
+                        setShowSuggestions(false);
+                      }}
+                      className="w-full text-left px-3 py-2 hover:bg-slate-100 border-b border-slate-100 last:border-0"
+                    >
+                      <div className="font-bold text-black text-xs">{s.name}</div>
+                      {s.phone && <div className="text-[10px] text-slate-500 font-mono">{s.phone}</div>}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2 bg-white px-2 py-1 rounded-xs border border-slate-300">

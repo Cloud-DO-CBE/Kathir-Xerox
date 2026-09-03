@@ -10,6 +10,7 @@ import { ExportModal } from '@/components/ExportModal';
 import { ServiceCatalogueModal } from '@/components/ServiceCatalogueModal';
 import { AutoWhatsAppToast } from '@/components/AutoWhatsAppToast';
 import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { ServiceItem, Transaction, DueCustomer } from '@/types';
 import { getTodayDateString, formatINR } from '@/lib/formatters';
 import { triggerAutoWhatsAppMessage } from '@/lib/whatsappUtils';
@@ -33,6 +34,23 @@ export default function PosBillingPage() {
     setServices(db.getServices());
     setAllTransactions(db.getTransactions());
     setDueCustomers(db.getDueCustomers());
+
+    async function loadData() {
+      try {
+        await api.syncOfflineData();
+        const [remoteServices, remoteTxs, remoteDues] = await Promise.all([
+          api.getServices(),
+          api.getTransactions(),
+          api.getDueCustomers(),
+        ]);
+        if (remoteServices && remoteServices.length > 0) setServices(remoteServices);
+        if (remoteTxs) setAllTransactions(remoteTxs);
+        if (remoteDues) setDueCustomers(remoteDues);
+      } catch (err) {
+        console.warn('Could not sync with Neon DB, using local data', err);
+      }
+    }
+    loadData();
   }, []);
 
   const todayTransactions = allTransactions.filter(
@@ -40,8 +58,8 @@ export default function PosBillingPage() {
   );
   const totalGross = todayTransactions.reduce((sum, t) => sum + (t.grand_total || 0), 0);
 
-  const handleCompleteOrder = (order: any, printBill?: boolean) => {
-    const newTx = db.addTransaction({
+  const handleCompleteOrder = async (order: any, printBill?: boolean) => {
+    const newTx = await api.createTransaction({
       payment_mode: order.paymentMode,
       customer_ref: order.customerRef,
       customer_phone: order.customerPhone,
@@ -62,8 +80,12 @@ export default function PosBillingPage() {
       })),
     });
 
-    setAllTransactions(db.getTransactions());
-    setDueCustomers(db.getDueCustomers());
+    const [updatedTxs, updatedDues] = await Promise.all([
+      api.getTransactions(),
+      api.getDueCustomers(),
+    ]);
+    setAllTransactions(updatedTxs);
+    setDueCustomers(updatedDues);
 
     if (printBill) {
       setSelectedReceiptTx(newTx);

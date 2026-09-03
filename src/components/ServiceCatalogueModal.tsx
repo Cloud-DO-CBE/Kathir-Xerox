@@ -164,7 +164,7 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
           <button
             onClick={() => {
               setActiveTab('SECURITY');
-              setNewPasswordInput(settings.accessPassword || 'RX135');
+              setNewPasswordInput(settings.accessPassword || '');
             }}
             className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all flex items-center gap-1.5 ${
               activeTab === 'SECURITY'
@@ -478,24 +478,24 @@ export const ServiceCatalogueModal: React.FC<ServiceCatalogueModalProps> = ({
                     setNewPasswordInput(e.target.value);
                     setSettings({ ...settings, accessPassword: e.target.value.trim() });
                   }}
-                  placeholder="Enter new password (e.g. RX135)"
+                  placeholder="Enter new password"
                   className="w-full bg-slate-50 border border-slate-300 focus:border-sky-500 focus:bg-white text-slate-900 rounded-xl px-3.5 py-2.5 text-sm font-mono font-bold tracking-wider outline-none"
                 />
 
                 <div className="flex items-center justify-between text-xs pt-1">
                   <span className="text-slate-500">
-                    Current Active Password: <code className="bg-slate-100 font-mono font-bold px-1.5 py-0.5 rounded text-slate-800">{settings.accessPassword || 'RX135'}</code>
+                    Current Active Password: <code className="bg-slate-100 font-mono font-bold px-1.5 py-0.5 rounded text-slate-800">{settings.accessPassword || '(not set)'}</code>
                   </span>
 
                   <button
                     type="button"
                     onClick={() => {
-                      setNewPasswordInput('RX135');
-                      setSettings({ ...settings, accessPassword: 'RX135' });
+                      setNewPasswordInput('');
+                      setSettings({ ...settings, accessPassword: '' });
                     }}
                     className="text-sky-700 hover:text-sky-900 font-semibold underline text-[11px]"
                   >
-                    Reset to Default RX135
+                    Reset to Default
                   </button>
                 </div>
               </div>

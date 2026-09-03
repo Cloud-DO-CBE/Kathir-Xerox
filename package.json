@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "postinstall": "prisma migrate deploy && npm run db:seed",
     "build": "next build",
     "build:export": "powershell -Command \"try { if (Test-Path 'src\\app\\api') { Move-Item 'src\\app\\api' 'src\\api_server' -Force }; next build; } finally { if (Test-Path 'src\\api_server') { Move-Item 'src\\api_server' 'src\\app\\api' -Force } }\"",
     "start": "next start",
@@ -15,11 +16,15 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:seed": "npx tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "export": "next export",
+    "deploy:firebase": "npm run export && firebase deploy"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "@prisma/adapter-neon": "^5.22.0",
     "@prisma/client": "^5.22.0",
+    "@types/ws": "^8.18.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.436.0",
@@ -27,6 +32,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^2.5.2",
+    "ws": "^8.21.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
