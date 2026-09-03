@@ -1,46 +1,35 @@
 import { ServiceItem, Transaction, DailyBook, DueCustomer } from "@/types";
-import { db, AppSettings, DEFAULT_SETTINGS } from "./db";
+import { db, AppSettings } from "./db";
 
 /**
  * Universal Data Layer for Kathir Xerox & E-Service Centre
- * Communicates with Next.js REST API backed by Neon PostgreSQL,
- * with fallback to local client storage.
+ * Neon PostgreSQL is the primary source of truth. 
+ * localStorage is used strictly for caching and offline-first performance.
  */
 export const api = {
   async getServices(): Promise<ServiceItem[]> {
     try {
       const res = await fetch("/api/services");
-      if (!res.ok) throw new Error("Failed to fetch services");
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        db.saveServices(data);
-        return data;
-      }
-      return db.getServices();
+      db.saveServices(data);
+      return data;
     } catch {
       return db.getServices();
     }
   },
 
   async saveService(service: ServiceItem): Promise<ServiceItem> {
-    try {
-      const res = await fetch("/api/services", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(service),
-      });
-      if (!res.ok) throw new Error("Failed to save service");
-      const saved = await res.json();
-      return saved;
-    } catch {
-      // Fallback local save
-      const current = db.getServices();
-      const idx = current.findIndex((s) => s.id === service.id);
-      if (idx >= 0) current[idx] = service;
-      else current.push(service);
-      db.saveServices(current);
-      return service;
-    }
+    const res = await fetch("/api/services", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(service),
+    });
+    if (!res.ok) throw new Error("Failed to save service");
+    const saved = await res.json();
+    const services = db.getServices();
+    db.saveServices(services.map(s => s.id === saved.id ? saved : s));
+    return saved;
   },
 
   async getTransactions(params?: { date?: string; month?: string; customer_ref?: string }): Promise<Transaction[]> {
@@ -54,6 +43,10 @@ export const api = {
       if (!res.ok) throw new Error("Failed to fetch transactions");
       const data = await res.json();
       if (Array.isArray(data)) {
+        // Cache full list to localStorage so offline mode works
+        if (!params?.date && !params?.month && !params?.customer_ref) {
+          db.saveTransactions(data);
+        }
         return data;
       }
       return params?.date ? db.getTransactionsByDate(params.date) : db.getTransactions();
@@ -71,21 +64,21 @@ export const api = {
       });
       if (!res.ok) throw new Error("Failed to save transaction to database");
       const saved = await res.json();
-      // Keep local store in sync
+      // Keep local cache in sync — deduplicate to avoid double entries
       const local = db.getTransactions();
-      db.saveTransactions([saved, ...local]);
+      const deduped = local.filter((t) => t.id !== saved.id);
+      db.saveTransactions([saved, ...deduped]);
       return saved;
     } catch {
-      // Offline fallback
+      // Offline fallback — save locally, will be synced on next page load
+      console.warn("DB unavailable — saving to localStorage for later sync");
       return db.addTransaction(txData);
     }
   },
 
   async deleteTransaction(id: string): Promise<boolean> {
     try {
-      const res = await fetch(`/api/transactions?id=${encodeURIComponent(id)}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/transactions?id=${encodeURIComponent(id)}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete transaction");
       db.deleteTransaction(id);
       return true;
@@ -97,25 +90,19 @@ export const api = {
   async getDailyBook(date: string): Promise<DailyBook | null> {
     try {
       const res = await fetch(`/api/daily-books?date=${date}`);
-      if (!res.ok) throw new Error("Failed to fetch daily book");
-      return await res.json();
+      return res.ok ? await res.json() : null;
     } catch {
       return null;
     }
   },
 
   async setDailyBookStatus(date: string, status: "OPEN" | "CLOSED"): Promise<DailyBook | null> {
-    try {
-      const res = await fetch("/api/daily-books", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ date, status }),
-      });
-      if (!res.ok) throw new Error("Failed to update daily book status");
-      return await res.json();
-    } catch {
-      return null;
-    }
+    const res = await fetch("/api/daily-books", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, status }),
+    });
+    return res.ok ? await res.json() : null;
   },
 
   async getDueCustomers(): Promise<DueCustomer[]> {
@@ -173,32 +160,50 @@ export const api = {
     }
   },
 
+  /**
+   * Syncs any locally-saved (offline) transactions to Neon DB.
+   * After a successful sync, replaces localStorage with the DB's authoritative copy.
+   * This ensures no duplicates and keeps all devices in sync.
+   */
   async syncOfflineData(): Promise<{ success: boolean; syncedTransactions: number; syncedServices: number }> {
     try {
-      const transactions = db.getTransactions();
-      const services = db.getServices();
+      const localTransactions = db.getTransactions();
+      const localServices = db.getServices();
       const settings = db.getSettings();
 
+      // Push any locally-saved data up to Neon DB
       const res = await fetch("/api/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transactions, services, settings }),
+        body: JSON.stringify({ transactions: localTransactions, services: localServices, settings }),
       });
 
       if (!res.ok) throw new Error("Sync failed");
-      return await res.json();
+      const result = await res.json();
+
+      // After successful sync, fetch the canonical list from Neon
+      // and replace localStorage so it matches the DB exactly (no duplicates)
+      const freshTxRes = await fetch("/api/transactions");
+      if (freshTxRes.ok) {
+        const freshTx = await freshTxRes.json();
+        if (Array.isArray(freshTx)) {
+          db.saveTransactions(freshTx);
+        }
+      }
+
+      return result;
     } catch (e: any) {
+      console.warn("Sync to Neon failed:", e?.message);
       return { success: false, syncedTransactions: 0, syncedServices: 0 };
     }
   },
 
-  async checkHealth(): Promise<{ status: "connected" | "disconnected" | "error"; message?: string }> {
+  async checkHealth(): Promise<{ status: "connected" | "disconnected" }> {
     try {
       const res = await fetch("/api/health");
-      const data = await res.json();
-      return data;
+      return res.ok ? { status: "connected" } : { status: "disconnected" };
     } catch {
-      return { status: "disconnected", message: "Cannot reach database" };
+      return { status: "disconnected" };
     }
-  },
+  }
 };

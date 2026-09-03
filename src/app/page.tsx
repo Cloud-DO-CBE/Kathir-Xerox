@@ -47,6 +47,7 @@ export default function HomePage() {
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
   const [dueCustomers, setDueCustomers] = useState<DueCustomer[]>([]);
+  const [dbStatus, setDbStatus] = useState<'loading' | 'connected' | 'offline'>('loading');
   
   // UI & View Mode states
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -76,23 +77,36 @@ export default function HomePage() {
   useEffect(() => {
     const isAuth = localStorage.getItem('kx_session_auth') === 'true';
     setIsAuthenticated(isAuth);
-    setServices(db.getServices());
-    setAllTransactions(db.getTransactions());
-    setDueCustomers(db.getDueCustomers());
 
     async function loadData() {
       try {
+        // 1. First show cached data instantly while DB loads
+        const cachedTx = db.getTransactions();
+        const cachedSrv = db.getServices();
+        if (cachedSrv.length > 0) setServices(cachedSrv);
+        if (cachedTx.length > 0) setAllTransactions(cachedTx);
+
+        // 2. Sync any offline-saved transactions up to Neon DB
         await api.syncOfflineData();
+
+        // 3. Fetch fresh data from Neon DB (single source of truth)
         const [remoteServices, remoteTxs, remoteDues] = await Promise.all([
           api.getServices(),
           api.getTransactions(),
           api.getDueCustomers(),
         ]);
+
         if (remoteServices && remoteServices.length > 0) setServices(remoteServices);
         if (remoteTxs) setAllTransactions(remoteTxs);
         if (remoteDues) setDueCustomers(remoteDues);
+        setDbStatus('connected');
       } catch (err) {
-        console.warn('Could not sync with Neon DB, using local data', err);
+        console.warn('Could not reach Neon DB, using cached local data', err);
+        // Fallback: show whatever is in localStorage
+        setServices(db.getServices());
+        setAllTransactions(db.getTransactions());
+        setDueCustomers(db.getDueCustomers());
+        setDbStatus('offline');
       }
     }
     loadData();
@@ -324,9 +338,30 @@ export default function HomePage() {
                     | கதிர் ஜெராக்ஸ் பதிவேடுகள்
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-slate-500 uppercase">
-                  ACTIVE LIVE SYSTEM
-                </span>
+                {/* DB Status Badge */}
+              <div className="flex items-center gap-1.5">
+                {dbStatus === 'loading' && (
+                  <span className="flex items-center gap-1 text-[10px] font-mono bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    DB CONNECTING...
+                  </span>
+                )}
+                {dbStatus === 'connected' && (
+                  <span className="flex items-center gap-1 text-[10px] font-mono bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    LIVE DB
+                  </span>
+                )}
+                {dbStatus === 'offline' && (
+                  <span className="flex items-center gap-1 text-[10px] font-mono bg-rose-50 text-rose-700 border border-rose-300 px-2 py-0.5 rounded-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    OFFLINE CACHE
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-mono text-slate-500 uppercase">
+                ACTIVE LIVE SYSTEM
+              </span>
               </div>
 
               {/* Master Cards: Today's Book Hero + Action Cards (Light Theme + Transparent Grid) */}
